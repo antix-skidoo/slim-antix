@@ -67,6 +67,8 @@ Cfg::Cfg()
     options.insert(option("input_font","Verdana:size=11"));
     options.insert(option("input_color", "#000000"));
     options.insert(option("input_cursor_height","20"));
+    options.insert(option("input_hidecursor","false"));
+    options.insert(option("input_center_text","false"));
     options.insert(option("input_maxlength_name","20"));
     options.insert(option("input_maxlength_passwd","20"));
     options.insert(option("input_shadow_xoffset", "0"));
