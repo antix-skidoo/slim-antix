@@ -9,7 +9,6 @@
    (at your option) any later version.
 */
 
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -17,7 +16,6 @@
 #include <stdint.h>
 #include <cstring>
 #include <cstdio>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -26,7 +24,6 @@
 #include "app.h"
 #include "numlock.h"
 #include "util.h"
-
 
 #ifdef HAVE_SHADOW
 #include <shadow.h>
@@ -303,6 +300,9 @@ void App::Run() {
     // Get screen and root window
     Scr = DefaultScreen(Dpy);
     Root = RootWindow(Dpy, Scr);
+    
+    // Intern _XROOTPMAP_ID property
+    BackgroundPixmapId = XInternAtom(Dpy, "_XROOTPMAP_ID", False);
 
     // for tests we use a standard window
     if (testing) {
@@ -1092,6 +1092,8 @@ void App::setBackground(const string& themedir) {
         }
         Pixmap p = image->createPixmap(Dpy, Scr, Root);
         XSetWindowBackgroundPixmap(Dpy, Root, p);
+	XChangeProperty(Dpy, Root, BackgroundPixmapId, XA_PIXMAP, 32,
+		PropModeReplace, (unsigned char *)&p, 1);
     }
     XClearWindow(Dpy, Root);
     
