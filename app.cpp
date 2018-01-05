@@ -599,7 +599,8 @@ void App::Login() {
         child_env[n] = NULL;
 # endif /* USE_CONSOLEKIT */
 
-        pam.end();
+	### skidoo nixed    
+        ###pam.end();
 #else
 
 # ifdef USE_CONSOLEKIT
