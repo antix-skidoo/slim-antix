@@ -7,7 +7,7 @@ Build-Depends: debconf, debhelper (>= 9), libjpeg-dev, libpam0g-dev,
 	libpng-dev, libxft-dev, libxmu-dev, po-debconf, sharutils,
 	libck-connector-dev, zlib1g-dev, cmake, freeglut3-dev
 Standards-Version: 3.9.8
-Homepage: http://slim.berlios.de/
+Homepage: https://github.com/antiX-Linux/slim-antix
 
 Package: slim
 Architecture: any
