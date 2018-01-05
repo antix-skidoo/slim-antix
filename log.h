@@ -1,6 +1,11 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
+#ifdef USE_CONSOLEKIT
+#include "Ck.h" 
+#include "PAM.h"
+#endif
+
 #include "const.h"
 #include <fstream>
 
