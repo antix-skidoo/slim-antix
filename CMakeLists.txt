@@ -149,6 +149,7 @@ include_directories(
 	${PNG_INCLUDE_DIR}
 )
 
+set(X11_Xmu_LIB Xmu)
 #Set up library with all found packages
 target_link_libraries(${PROJECT_NAME}
 	${M_LIB}
