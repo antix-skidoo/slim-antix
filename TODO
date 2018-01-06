@@ -2,6 +2,10 @@ re-add "themes/default/background.jpg"
 package a TINY (solid black 1280x1024 jpg)
 (the debian installer currently deleted themes/default/ dir anyhow)
 
+consider adding htmldocs, in addition to shipping a manpage
+
+app.cpp ~~ ensure error handling in case 'scrot' is not installed
+(display error msg to user alerting the absense, or just return?)
 
 
 v---- ====================== older, mostly inherited notes
