@@ -593,7 +593,21 @@ void App::Login() {
 
         n++;
 
-        child_env = static_cast<char**>(malloc(sizeof(char*)*n));
+	/*    expands the pam environment to add XDG_SESSION_COOKIE from consolekit,
+               but the malloc isn't large enough to provide the final NULL element in the array:
+
+	       Example - Array starts with size of 4; 3 items + NULL.  Index 0-2 are items, 3 is NULL.
+	       The code increments n from 0 until NULL to get 3, add 1 more to get n=4
+               (the size of the original array).  To add an element, the malloc needs to be on 5 (n+1) 
+	       rather than 4 (n) as it was before.  The following change addresses that.
+
+              The memcpy can copy 4 (ie, n), as there are 4 elements in the original array.
+              Also, index 3 (n-1) is the old NULL, where we want our new element, and 4 (n)
+              should be the new NULL, so those lines are correct and don't need adjustment.
+	*/
+        #child_env = static_cast<char**>(malloc(sizeof(char*)*n));
+        child_env = static_cast<char**>(malloc(sizeof(char*)*(n+1)));    
+	    
         memcpy(child_env, old_env, sizeof(char*)*n);
         child_env[n - 1] = StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
         child_env[n] = NULL;
