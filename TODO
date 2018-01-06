@@ -12,6 +12,9 @@ app.cpp ~~ ensure error handling in case 'scrot' is not installed
 
 (maybe, eventually) investigate the benefit from modding "sessiondir" -handling code, as seen here: https://github.com/bbidulock/slim/commit/059d9c7562fa454ccc8047a0e9a91da111335359
 
+app.cpp, app.h
+followup -- cull currently-outcommented unused Merge_non_crop()
+
 
 =======================
 
