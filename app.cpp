@@ -995,7 +995,9 @@ int App::StartServer() {
         break;
     }
 
-    delete args;
+    #  skidoo: the following change reputedly fixes a small memory leak
+    #delete args;
+    delete [] args;
 
     serverStarted = true;
 
