@@ -292,6 +292,9 @@ void Image::Merge(Image* background, const int x, const int y) {
  * background, the background must contain the image.
  */
 #define IMG_POS_RGB(p, x) (3 * p + x)
+//    ^---v
+//     skidoo todo followup to cull this apparently-unused fn
+/*
 void Image::Merge_non_crop(Image* background, const int x, const int y)
 {
 	int bg_w = background->Width();
@@ -338,9 +341,11 @@ void Image::Merge_non_crop(Image* background, const int x, const int y)
 	rgb_data = new_rgb;
 	png_alpha = NULL;
 }
+*/
+// skidoo
 
-/* Tile the image growing its size to the minimum entire
- * multiple of w * h.
+
+/* Tile the image growing its size to the minimum entire multiple of w * h.
  * The new dimensions should be > of the current ones.
  * Note that this flattens image (alpha removed)
  */
