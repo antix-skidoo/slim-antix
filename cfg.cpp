@@ -54,8 +54,9 @@ Cfg::Cfg()
     options.insert(option("shutdown_msg","The system is halting..."));
     options.insert(option("reboot_msg","The system is rebooting..."));
     options.insert(option("sessions","wmaker,blackbox,icewm"));
-    //      session dir would conflict (replace) the "sessions" option
-    //options.insert(option("sessiondir",""));
+    //    when user supplies non-blank pathstring (vis slim.conf)
+    //    sessiondir lookup is performed (and "sessions" conf option is ignored)
+    options.insert(option("sessiondir",""));
     options.insert(option("hidecursor","false"));
 
     // Theme stuff
