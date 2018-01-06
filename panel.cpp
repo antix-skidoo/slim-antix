@@ -200,7 +200,7 @@ void Panel::Message(const string& text) {
     XGlyphInfo extents;
     XftDraw *draw = XftDrawCreate(Dpy, Root,
                                   DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
-    XftTextExtents8(Dpy, msgfont, reinterpret_cast<const XftChar8*>(text.c_str()),
+    XftTextExtentsUtf8(Dpy, msgfont, reinterpret_cast<const XftChar8*>(text.c_str()),
                     text.length(), &extents);
     cfgX = cfg->getOption("msg_x");
     cfgY = cfg->getOption("msg_y");
