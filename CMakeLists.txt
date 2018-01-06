@@ -143,6 +143,9 @@ include_directories(
 	${X11_Xft_INCLUDE_PATH}
 	${X11_Xrender_INCLUDE_PATH}
 	
+	/*    Using FREETYPE_INCLUDE_DIR_freetype2 directly can cause issues
+	       with newer freetype packages, as it doesn't contain all freetype include dirs.
+	*/
 	#${FREETYPE_INCLUDE_DIR_freetype2}
 	${FREETYPE_INCLUDE_DIRS}
 		
