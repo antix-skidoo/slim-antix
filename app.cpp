@@ -52,13 +52,14 @@ int conv(int num_msg, const struct pam_message **msg,
                     case Panel::Reboot:
                         (*resp)[i].resp=strdup("root");
                         break;
-
                     case Panel::Console:
                     case Panel::Exit:
                     case Panel::Login:
                         (*resp)[i].resp=strdup(panel->GetName().c_str());
                         break;
-                }
+		    default:
+			break;
+		}
                 break;
 
             case PAM_PROMPT_ECHO_OFF:
@@ -405,7 +406,9 @@ void App::Run() {
             case Panel::Exit:
                 Exit();
                 break;
-        }
+            default:
+                break;
+	}
     }
 }
 
