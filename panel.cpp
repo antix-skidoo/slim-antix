@@ -246,8 +246,8 @@ void Panel::Cursor(int visible) {
     	return;
     }
 	
-    const char* text;
-    int xx, yy, y2, cheight;
+    const char* text = NULL;
+    int xx = 0, yy = 0, y2 = 0, cheight = 0;
     const char* txth = "Wj"; // used to get cursor height
 
     switch(field) {
@@ -357,8 +357,8 @@ bool Panel::OnKeyPress(XEvent& event) {
     char ascii;
     KeySym keysym;
     XComposeStatus compstatus;
-    int xx;
-    int yy;
+    int xx = 0;
+    int yy = 0;
     string text;
     string formerString = "";
     
