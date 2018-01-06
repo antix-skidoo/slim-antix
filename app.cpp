@@ -481,7 +481,16 @@ bool App::AuthenticateUser(bool focuspass){
         return true;
 
     encrypted = crypt(LoginPanel->GetPasswd().c_str(), correct);
-    return ((strcmp(encrypted, correct) == 0) ? true : false);
+    /*   Starting with glibc 2.17 (eglibc 2.17), crypt() fails with EINVAL
+          (w/ NULL return) if the salt violates specifications. Additionally,
+          on FIPS-140 enabled Linux systems, DES/MD5-encrypted passwords
+          passed to crypt() fail with EPERM (w/ NULL return).
+
+          When using glibc's crypt(), check return value to avoid a possible
+          NULL pointer dereference.
+    */
+    #return ((strcmp(encrypted, correct) == 0) ? true : false);
+    return ((encrypted && strcmp(encrypted, correct) == 0) ? true : false);
 }
 #endif
 
