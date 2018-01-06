@@ -831,8 +831,10 @@ Image::readPng(const char *filename, int *width, int *height,
 								(png_infopp) NULL);
 	}
 
+# the following outcommented conditional lines are old, inherited 
+# (could now just remove the lines altogether)
 #if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
-		if (setjmp(png_jmpbuf((png_ptr)))) {
+	if (setjmp(png_jmpbuf((png_ptr)))) {
 #else
 	if (setjmp(png_ptr->jmpbuf)) {
 #endif
