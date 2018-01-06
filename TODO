@@ -2,6 +2,9 @@ re-add "themes/default/background.jpg"
 package a TINY (solid black 1280x1024 jpg)
 (the debian installer currently deleted themes/default/ dir anyhow)
 
+The "console" slim.conf option is described as "open a xterm console"
+verify this is accurate (and is working)
+
 consider adding htmldocs, in addition to shipping a manpage
 
 app.cpp ~~ ensure error handling in case 'scrot' is not installed
