@@ -44,6 +44,7 @@ set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DSYSCONFDIR=\"${SYSCONFDIR}\"")
 # project-specific CFLAGS or CPPFLAGS not needed. Defer to use of the system-specified flags.
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -O2" )
 #set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -Wall -g -O2" )
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
 
 # source 
 set(slim_srcs
