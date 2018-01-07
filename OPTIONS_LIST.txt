@@ -5,6 +5,12 @@ Currently, a comprehensive list is not provided within the default-provided slim
 QUOTES SHOWN HERE FOR EACH OPTION NAME AND EACH OPTION VALUE
 SHOULD _NOT_ BE USED WITHIN THE slim.conf FILE
 
+Note:
+welcome_msg allows 2 variables %host and %domain
+sessionstart_cmd allows %user (executed right before login_cmd) and it is also allowed in sessionstop_cmd
+login_cmd allows %session and %theme
+
+
 "default_path"      "/bin:/usr/bin:/usr/local/bin"
 "default_xserver"      "/usr/bin/X"
 "xserver_arguments"      ""
