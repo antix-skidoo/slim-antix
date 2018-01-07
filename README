@@ -10,8 +10,9 @@ PREFACE (specific to this antiX-maintained version of SLiM)
     with future changes cherry-picked from various sources.
     For now, the list of source consulted as well as both the completed
     and prospective edits/changes are detailed in TODO
-    (A summary, plus a TBD version declaration, will later be placed
-    into ChangeLog.)
+    
+    In order to preclude the need for marking/pinning packages,
+    the declared version (within CMakeLists.txt and debian/ChangeLog) is v1.4.1
 
 
 INTRODUCTION
