@@ -9,7 +9,7 @@ PREFACE (specific to this antiX-maintained version of SLiM)
     This antiX-maintained version should be regarded as a hard fork,
     with future changes cherry-picked from various sources.
     For now, the list of source consulted as well as both the completed
-    and prospective edits/changes are detailed in TODO
+    and prospective edits/changes are detailed in the TODO file.
     
     In order to preclude the need for marking/pinning packages,
     the declared version (within CMakeLists.txt and debian/ChangeLog) is v1.4.1
@@ -17,9 +17,7 @@ PREFACE (specific to this antiX-maintained version of SLiM)
 
 INTRODUCTION
     SLiM (Simple Login Manager) is a graphical login manager for X11.
-    It aims to be simple, fast and independent from the various
-    desktop environments.
-    SLiM is based on latest stable release of Login.app by Per Lidén.
+    It aims to be simple, fast and independent from the various desktop environments.
 
     Features:
     - External themes and configuration
@@ -33,14 +31,11 @@ INSTALLATION
     see the INSTALL file
     
 USAGE
-
-    To launch slim, execute run the slim binary,
-    followed by the -d option if you want it to
-    run as a daemon in the background (reccommended)
+    To launch slim, execute run the slim binary, 
+    followed by the -d option if you want it to run as a daemon in the background (recommended)
     
-    enter username and password to login. The ~/.xinitrc
-    file is executed by default, so be sure to have a working
-    .xinitrc file in your home.
+    Enter username and password to login. The ~/.xinitrc file is executed by default,
+    so be sure to have a working  .xinitrc file in your home.
     
     Special usernames (commands configurable in the config file):
     - console: start console login
@@ -48,24 +43,18 @@ USAGE
     - halt: halt the system
     - reboot: reboot the system
     
-    pressing the F11 key executes a user-specified
-    command (see the configuration file); the default command
-    is to take a screenshot (using scrot, which is pre-installed in antiX)
+    pressing the F11 key executes a user-specified command (see the configuration file);
+    the default command is to take a screenshot (using scrot, which is pre-installed in antiX)
     
 CONFIGURATION
     /usr/etc/slim.conf is the main configuration file.
     Options are explained via inline comments within the file itself
+    ( see also: /usr/share/doc/slim/SLIM_OPTIONS.txt )
     
 THEMES
-    See THEMES
+    See THEMES file
 
 COPYRIGHT
     SLiM is copyright (c) 2004-06 by Simone Rota, Johannes Winkelmann,
     Nobuhiro Iwamatsu and is available under the GNU General Public License.
     See the COPYING file for the complete license.
-
-    Image handling code adapted and extended from xplanet 1.0.1,
-    copyright (c) 2002-04 by Hari Nair
-
-    Login.app is copyright (c) 1997, 1998 by Per Liden and is 
-    licensed through the GNU General Public License. 
