@@ -15,10 +15,10 @@ INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckCXXCompilerFlag)
 INCLUDE(CheckTypeSize)
 
-# Version
+# Version     WAS 1.3.4
 set(SLIM_VERSION_MAJOR "1")
-set(SLIM_VERSION_MINOR "3")
-set(SLIM_VERSION_PATCH "4")
+set(SLIM_VERSION_MINOR "4")
+set(SLIM_VERSION_PATCH "1")
 set(SLIM_VERSION "${SLIM_VERSION_MAJOR}.${SLIM_VERSION_MINOR}.${SLIM_VERSION_PATCH}")
 
 set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Directory")
