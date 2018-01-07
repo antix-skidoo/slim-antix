@@ -15,6 +15,8 @@ app.cpp ~~ ensure error handling in case 'scrot' is not installed
 app.cpp, app.h
 followup -- cull currently-outcommented unused Merge_non_crop()
 
+investigate how to avoid the necessity of shipping (and maintaining) this extra file: debian/local/Xsession.d/slim.template
+ 
 
 =======================
 
