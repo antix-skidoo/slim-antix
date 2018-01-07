@@ -40,6 +40,7 @@ Cfg::Cfg()
     options.insert(option("suspend_cmd",""));
     options.insert(option("sessionstart_cmd",""));
     options.insert(option("sessionstop_cmd",""));
+    //  === NOTE: use of "x-terminal-emulator" for console_cmd would pose a security risk ===
     options.insert(option("console_cmd","/usr/bin/xterm -C -fg white -bg black +sb -g %dx%d+%d+%d -fn %dx%d -T ""Console login"" -e /bin/sh -c ""/bin/cat /etc/issue; exec /bin/login"""));
     options.insert(option("screenshot_cmd","import -window root /slim.png"));
     options.insert(option("welcome_msg","Welcome to %host"));
