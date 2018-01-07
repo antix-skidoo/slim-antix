@@ -1,0 +1,103 @@
+list of available SLiM configuration options
+(This comprehensive list was gleaned from cfg.cpp
+Currently, a comprehensive list is not provided within the default-provided slim.conf, nor within the manpage.)
+
+QUOTES SHOWN HERE FOR EACH OPTION NAME AND EACH OPTION VALUE
+SHOULD _NOT_ BE USED WITHIN THE slim.conf FILE
+
+"default_path"      "/bin:/usr/bin:/usr/local/bin"
+"default_xserver"      "/usr/bin/X"
+"xserver_arguments"      ""
+"numlock"      ""
+"daemon"      ""
+"xauth_path"      "/usr/bin/xauth"
+"login_cmd"      "exec /bin/bash -login ~/.xinitrc %session"
+"halt_cmd"      "/sbin/shutdown -h now"
+"reboot_cmd"      "/sbin/shutdown -r now"
+"suspend_cmd"      ""
+"sessionstart_cmd"      ""
+"sessionstop_cmd"      ""
+"console_cmd"      "/usr/bin/xterm -C -fg white -bg 
+black +sb -g %dx%d+%d+%d -fn %dx%d -T ""Console login"" -e /bin/sh -c ""/bin/cat /etc/issue; exec /bin/login"""
+"screenshot_cmd"      "import -window root /slim.png"
+"welcome_msg"      "Welcome to %host"
+"session_msg"      "Session:"
+"default_user"      ""
+"focus_password"      "no"
+"auto_login"      "no"
+"current_theme"      "default"
+"lockfile"      "/var/run/slim.lock"
+"logfile"      "/var/log/slim.log"
+"authfile"      "/var/run/slim.auth"
+"shutdown_msg"      "The system is halting..."
+"reboot_msg"      "The system is rebooting..."
+"sessions"      "wmaker,blackbox,icewm"
+
+//    when user supplies non-blank pathstring (via slim.conf)
+//    sessiondir lookup is performed (and "sessions" conf option is ignored)
+"sessiondir"      ""
+"hidecursor"      "false"
+
+    // Theme stuff
+"input_panel_x"      "50%"
+"input_panel_y"      "40%"
+"input_name_x"      "200"
+"input_name_y"      "154"
+"input_pass_x"      "-1"         // default is single inputbox
+"input_pass_y"      "-1"
+"input_font"      "Verdana:size=11"
+"input_color"      "#000000"
+"input_cursor_height"      "20"
+"input_hidecursor"      "false"
+"input_center_text"      "false"
+"input_maxlength_name"      "20"
+"input_maxlength_passwd"      "20"
+"input_shadow_xoffset"      "0"
+"input_shadow_yoffset"      "0"
+"input_shadow_color"      "#FFFFFF"
+
+"welcome_font"      "Verdana:size=14"
+"welcome_color"      "#FFFFFF"
+"welcome_x"      "-1"
+"welcome_y"      "-1"
+"welcome_shadow_xoffset"      "0"
+"welcome_shadow_yoffset"      "0"
+"welcome_shadow_color"      "#FFFFFF"
+
+"intro_msg"      ""
+"intro_font"      "Verdana:size=14"
+"intro_color"      "#FFFFFF"
+"intro_x"      "-1"
+"intro_y"      "-1"
+
+"background_style"      "stretch"
+"background_color"      "#CCCCCC"
+ 
+"username_font"      "Verdana:size=12"
+"username_color"      "#FFFFFF"
+"username_x"      "-1"
+"username_y"      "-1"
+"username_msg"      "Please enter your username"
+"username_shadow_xoffset"      "0"
+"username_shadow_yoffset"      "0"
+"username_shadow_color"      "#FFFFFF"
+ 
+"password_x"      "-1"
+"password_y"      "-1"
+"password_msg"      "Please enter your password"
+ 
+"msg_color"      "#FFFFFF"
+"msg_font"      "Verdana:size=16:bold"
+"msg_x"      "40"
+"msg_y"      "40"
+"msg_shadow_xoffset"      "0"
+"msg_shadow_yoffset"      "0"
+"msg_shadow_color"      "#FFFFFF"
+ 
+"session_color"      "#FFFFFF"
+"session_font"      "Verdana:size=16:bold"
+"session_x"      "50%"
+"session_y"      "90%"
+"session_shadow_xoffset"      "0"
+"session_shadow_yoffset"      "0"
+"session_shadow_color"      "#FFFFFF"
