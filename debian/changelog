@@ -1,3 +1,13 @@
+slim (1.4.1) unstable; urgency=medium
+
+  * declaring a much higher version number, to avoid need of pinning pkg
+  * this is a ROLLUP release
+   - various bug fixes dredged from various source repositories
+   - expanded documentation
+   - a definitive UPSTREAM source no longer exists.
+    
+ -- skidoo <email@redact.ed>  Sun, 07 Jan 2018 12:34:56 +0100
+
 slim (1.3.6.10-really1.3.4-2-1) unstable; urgency=medium
 
   * antiX-17.1 build 
