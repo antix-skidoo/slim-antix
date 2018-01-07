@@ -18,6 +18,9 @@ followup -- cull currently-outcommented unused Merge_non_crop()
 investigate how to avoid the necessity of shipping (and maintaining) this extra file: debian/local/Xsession.d/slim.template
  
 NOTED: attribution cited within this file is probably incorrect: themes/default/COPYRIGHT.background
+
+~~~~~ The SLiM display manager is no longer maintained by its original authors. 
+~~~~~ The old website (http://slim.berlios.de) is now gone.The last commit to the berlios project site was on October 3rd, 2013.
   
 
 =======================
