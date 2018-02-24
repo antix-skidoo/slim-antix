@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=slim wallpaper
+Comment=set/change background image displayed to SLiM login screen
 Exec=gksu antixccslim.sh
 Icon=/usr/share/icons/Faenza-Cupertino-mini/apps/48/wallpaper.png
 Terminal=false

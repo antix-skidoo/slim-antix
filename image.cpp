@@ -252,6 +252,7 @@ void Image::Merge(Image* background, const int x, const int y) {
 
 	double tmp;
 	unsigned char *new_rgb = (unsigned char *) malloc(3 * width * height);
+	//  skidoo    howdy.  Can probably nix the following memset line
 	memset(new_rgb, 0, 3 * width * height);
 	const unsigned char *bg_rgb = background->getRGBData();
 
@@ -836,8 +837,10 @@ Image::readPng(const char *filename, int *width, int *height,
 								(png_infopp) NULL);
 	}
 
-# the following outcommented conditional lines are old, inherited 
-# (could now just remove the lines altogether)
+/*
+     the following outcommented conditional lines are old, inherited
+     (could now just remove the lines altogether)
+*/
 #if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
 	if (setjmp(png_jmpbuf((png_ptr)))) {
 #else
@@ -955,4 +958,3 @@ file_close:
 	fclose(infile);
 	return(ret);
 }
-

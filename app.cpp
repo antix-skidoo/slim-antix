@@ -177,7 +177,7 @@ App::App(int argc, char** argv)
             break;
         }
     }
-#ifndef XNEST_DEBUG 
+#ifndef XNEST_DEBUG
     if (getuid() != 0 && !testing) {
         logStream << APPNAME << ": only root can run this program" << endl;
         exit(ERR_EXIT);
@@ -301,7 +301,7 @@ void App::Run() {
     // Get screen and root window
     Scr = DefaultScreen(Dpy);
     Root = RootWindow(Dpy, Scr);
-    
+
     // Intern _XROOTPMAP_ID property
     BackgroundPixmapId = XInternAtom(Dpy, "_XROOTPMAP_ID", False);
 
@@ -322,11 +322,11 @@ void App::Run() {
     bool firstloop = true; // 1st time panel is shown (for automatic username)
     bool focuspass = cfg->getOption("focus_password")=="yes";
     bool autologin = cfg->getOption("auto_login")=="yes";
-    
+
     if (firstlogin && cfg->getOption("default_user") != "") {
         LoginPanel->SetName(cfg->getOption("default_user") );
-        #ifdef USE_PAM
-	pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
+    #ifdef USE_PAM
+	    pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
 	#endif
         firstlogin = false;
         if (autologin) {
@@ -341,7 +341,7 @@ void App::Run() {
     } else if (numlock == "off") {
         NumLock::setOff(Dpy);
     }
-    
+
     // Start looping
     int panelclosed = 1;
     Panel::ActionType Action;
@@ -362,8 +362,8 @@ void App::Run() {
         }
 
         LoginPanel->Reset();
-	
-	
+
+
         if (firstloop && cfg->getOption("default_user") != "") {
             LoginPanel->SetName(cfg->getOption("default_user") );
         }
@@ -376,7 +376,7 @@ void App::Run() {
             XBell(Dpy, 100);
             continue;
         }
-	
+
 	firstloop = false;
 
         Action = LoginPanel->getAction();
@@ -451,7 +451,7 @@ bool App::AuthenticateUser(bool focuspass){
         }
     }
     LoginPanel->EventHandler(Panel::Get_Passwd);
-    
+
     char *encrypted, *correct;
     struct passwd *pw;
 
@@ -472,7 +472,7 @@ bool App::AuthenticateUser(bool focuspass){
         return false;
 
 #ifdef HAVE_SHADOW
-    struct spwd *sp = getspnam(pw->pw_name);    
+    struct spwd *sp = getspnam(pw->pw_name);
     endspent();
     if(sp)
         correct = sp->sp_pwdp;
@@ -492,7 +492,7 @@ bool App::AuthenticateUser(bool focuspass){
           When using glibc's crypt(), check return value to avoid a possible
           NULL pointer dereference.
     */
-    #return ((strcmp(encrypted, correct) == 0) ? true : false);
+    //return ((strcmp(encrypted, correct) == 0) ? true : false);
     return ((encrypted && strcmp(encrypted, correct) == 0) ? true : false);
 }
 #endif
@@ -556,7 +556,7 @@ void App::Login() {
     maildir.append(pw->pw_name);
     string xauthority = pw->pw_dir;
     xauthority.append("/.Xauthority");
-    
+
 #ifdef USE_PAM
     // Setup the PAM environment
     try{
@@ -610,23 +610,22 @@ void App::Login() {
 
 	       Example - Array starts with size of 4; 3 items + NULL.  Index 0-2 are items, 3 is NULL.
 	       The code increments n from 0 until NULL to get 3, add 1 more to get n=4
-               (the size of the original array).  To add an element, the malloc needs to be on 5 (n+1) 
+               (the size of the original array).  To add an element, the malloc needs to be on 5 (n+1)
 	       rather than 4 (n) as it was before.  The following change addresses that.
 
               The memcpy can copy 4 (ie, n), as there are 4 elements in the original array.
               Also, index 3 (n-1) is the old NULL, where we want our new element, and 4 (n)
               should be the new NULL, so those lines are correct and don't need adjustment.
 	*/
-        #child_env = static_cast<char**>(malloc(sizeof(char*)*n));
-        child_env = static_cast<char**>(malloc(sizeof(char*)*(n+1)));    
-	    
+        // child_env = static_cast<char**>(malloc(sizeof(char*)*n));
+        child_env = static_cast<char**>(malloc(sizeof(char*)*(n+1)));
+
         memcpy(child_env, old_env, sizeof(char*)*n);
         child_env[n - 1] = StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
         child_env[n] = NULL;
 # endif /* USE_CONSOLEKIT */
-
-	### skidoo nixed    
-        ###pam.end();
+	    //      v--- skidoo nixed
+        //pam.end();
 #else
 
 # ifdef USE_CONSOLEKIT
@@ -634,8 +633,11 @@ void App::Login() {
 # else
         const int Num_Of_Variables = 11; // Number of env. variables + 1
 # endif /* USE_CONSOLEKIT */
+
+        /*
         char** child_env = static_cast<char**>(malloc(sizeof(char*)*Num_Of_Variables));
         int n = 0;
+        */
         if(term) child_env[n++]=StrConcat("TERM=", term);
         child_env[n++]=StrConcat("HOME=", pw->pw_dir);
         child_env[n++]=StrConcat("PWD=", pw->pw_dir);
@@ -838,11 +840,11 @@ void App::RestartServer() {
     };
 #endif
 
-    StopServer(); 
+    StopServer();
     RemoveLock();
 	while (waitpid(-1, NULL, WNOHANG) > 0); // Collects all dead childrens
     Run();
-} 
+}
 
 void App::KillAllClients(Bool top) {
     Window dummywindow;
@@ -1007,8 +1009,8 @@ int App::StartServer() {
         break;
     }
 
-    #  skidoo: the following change reputedly fixes a small memory leak
-    #delete args;
+    //  skidoo: the following change reputedly fixes a small memory leak
+    //delete args;
     delete [] args;
 
     serverStarted = true;
@@ -1124,7 +1126,7 @@ void App::setBackground(const string& themedir) {
 		PropModeReplace, (unsigned char *)&p, 1);
     }
     XClearWindow(Dpy, Root);
-    
+
     XFlush(Dpy);
     delete image;
 }

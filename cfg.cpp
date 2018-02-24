@@ -24,7 +24,7 @@ using namespace std;
 
 typedef pair<string,string> option;
 
-Cfg::Cfg() 
+Cfg::Cfg()
     : currentSession(-1)
 {
     // Configuration options
@@ -115,7 +115,7 @@ Cfg::Cfg()
     options.insert(option("msg_shadow_xoffset","0"));
     options.insert(option("msg_shadow_yoffset","0"));
     options.insert(option("msg_shadow_color","#FFFFFF"));
-    
+
 
     options.insert(option("session_color","#FFFFFF"));
     options.insert(option("session_font","Verdana:size=16:bold"));
@@ -138,38 +138,30 @@ Cfg::~Cfg() {
  */
 bool Cfg::readConf(string configfile) {
     int n = -1;
-    unsigned int pos = 0;
-    string line, next, op, fn(configfile);
+    string line, fn(configfile);
     map<string,string>::iterator it;
-    if (!cfgfile) {
+    string op;
+    ifstream cfgfile( fn.c_str() );
+    if (cfgfile) {
+        while (getline( cfgfile, line )) {
+            it = options.begin();
+            while (it != options.end()) {
+                op = it->first;
+                n = line.find(op);
+                if (n == 0)
+                    options[op] = parseOption(line, op);
+                it++;
+            }
+        }
+        cfgfile.close();
+
+        fillSessionList();
+
+        return true;
+    } else {
         error = "Cannot read configuration file: " + configfile;
         return false;
     }
-	 while (getline(cfgfile, line)) {
-        if ((pos = line.find('\\')) != string::npos) {
-             if (line.length() == pos + 1) {
-                  line.replace(pos, 1, " ");
-                  next = next + line;
-                  continue;
-             } else
-                  line.replace(pos, line.length() - pos, " ");
-         }
-         if (!next.empty()) {
-              line = next + line;
-              next = "";
-         }
-         it = options.begin();
-         while (it != options.end()) {
-              op = it->first;
-              n = line.find(op);
-              if (n == 0)
-                   options[op] = parseOption(line, op);
-              it++;
-         }
-    }
-    cfgfile.close();
-    fillSessionList();
-    return true;
 }
 
 /* Returns the option value, trimmed */
@@ -225,7 +217,7 @@ string Cfg::getWelcomeMessage(){
     if (n >= 0) {
         string tmp = s.substr(0, n);;
         char domain[40];
-        getdomainname(domain,40);
+        //getdomainname(domain,40);  // unused
         tmp = tmp + domain;
         tmp = tmp + s.substr(n+7, s.size() - n);
         s = tmp;
@@ -248,8 +240,8 @@ int Cfg::getIntOption(std::string option) {
 
 // Get absolute position
 int Cfg::absolutepos(const string& position, int max, int width) {
-    int n = -1;
-    n = position.find("%");
+    //int n = -1;
+    int n = position.find("%");
     if (n>0) { // X Position expressed in percentage
         int result = (max*string2int(position.substr(0, n).c_str())/100) - (width / 2);
         return result < 0 ? 0 : result ;
@@ -269,9 +261,9 @@ void Cfg::split(vector<string>& v, const string& str, char c, bool useEmpty) {
     tmp = string(begin, s);
     if (useEmpty || tmp.size() > 0)
             v.push_back(tmp);
-        if (s == str.end()) {
-            break;
-        }
+            if (s == str.end()) {
+                break;
+            }
         if (++s == str.end()) {
         if (useEmpty)
                 v.push_back("");
@@ -285,6 +277,14 @@ void Cfg::fillSessionList(){
     string strSessionDir  = getOption("sessiondir");
 
     sessions.clear();
+
+    // Enable match for "default" in .xinitrc thus setting the default xsession.
+    // Without the following 2 lines, the order of xsessions is dependent on
+    //      the order in which readdir(pDir) returns them.
+    //      Thus the default xsession may be quite random.
+    ////pair<string,string> session("","default");
+    ////sessions.push_back(session);
+    //    ^-----
 
     if( !strSessionDir.empty() ) {
         DIR *pDir = opendir(strSessionDir.c_str());
@@ -300,7 +300,7 @@ void Cfg::fillSessionList(){
                 struct stat oFileStat;
 
                 if (stat(strFile.c_str( ), &oFileStat) == 0){
-                    if (S_ISREG(oFileStat.st_mode) && 
+                    if (S_ISREG(oFileStat.st_mode) &&
                         access(strFile.c_str(), R_OK | X_OK) == 0){
                         sessions.push_back(string(pDirent->d_name));
                     }
@@ -308,7 +308,7 @@ void Cfg::fillSessionList(){
             }
             closedir(pDir);
         }
-    } 
+    }
 
     if (sessions.empty()){
         split(sessions, strSessionList, ',', false);

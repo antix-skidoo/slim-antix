@@ -1,0 +1,51 @@
+#!/bin/bash
+# autologin setup tool for SLiM
+
+TEXTDOMAINDIR=/usr/share/locale
+TEXTDOMAIN=slim-login
+
+[[ $DISPLAY ]] || { echo "There is no xserver running. Exiting..." ; exit 1 ; }
+[[ $(id -u) -eq 0 ]] || { yad --image "error" --title "!" --button=OK --text "root (sudo) authorization required \! \n\nCannot continue." ; exit 1 ; }
+[[ -e /usr/local/bin/yad ]] || { echo "yad (provided by 'antix-goodies' package) missing; cannot proceed"; exit 1; }
+
+if [ ! -w /etc/slim.conf ]; then
+    yad "error" --title "!" --button=OK --text "/etc/slim.conf is missing or not writable\!\n\nunable to proceed"
+    exit 1
+fi
+
+username=$(yad --entry --width 320 --title "SLiM autologin configuration" --text $"Enter username for auto-login.");
+
+[[ $username != "" ]] || { yad "error" --title "!" --button=OK --text "No username provided. Will now exit"; exit 1; }
+
+### guard against typos (and do not presume a "demo" user account still exists)
+### The home directory check avoids the need to regex match/check for "valid" username string.
+if [[ "$username" -eq "root" ]]; then
+    echo "selected autologin as root ~~ not recommended, but... oh well";
+elif [ ! -e /home/$username ]; then
+    yad "error" --title "!" --button=OK --text "a home directory for the specified \
+      user, $username, does not exist\!\n\nunable to proceed"
+    exit 1;
+fi
+
+# not ideal (only one prior copy preserved)
+cp -p --force /etc/slim.conf /usr/share/slim/slim.conf.backup
+
+difference=$(diff /etc/slim.conf /usr/share/slim/slim.conf.backup &2>/dev/null)
+
+if [ "$difference" = "" ]; then
+    ### ===== .template is presumed original and immutable =====
+    ###  NOT IDEAL (overwrites any other options which sysadmin has customized,
+    ###     unless sysadmin knows/remembers to ALSO customize the .template file_
+    cp -p --force /usr/share/slim/slim.template /etc/slim.conf
+    echo "auto_login          yes" >> /etc/slim.conf
+    echo "default_user        $username" >> /etc/slim.conf
+    echo $"Default slim.conf replaced."
+    yad --title "success" --button=OK --text "successfully updated autologin details"
+    exit 0;
+else
+    echo $"Error in making backup!"
+    yad "error" --title "!" --button=OK --text "Error: failed to create /etc/slim.conf backup copy"
+    exit 1
+fi
+
+exit 0

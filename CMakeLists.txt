@@ -46,7 +46,7 @@ set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DSYSCONFDIR=\"${SYSCONFDIR}\"")
 #set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -Wall -g -O2" )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
 
-# source 
+# source
 set(slim_srcs
 	main.cpp
 	app.cpp
@@ -77,16 +77,20 @@ find_package(X11 REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
-#find_package(ZLIB REQUIRED)
+#find_package(ZLIB REQUIRED)  # dpkg-shlibdeps sez "none of this library's symbols are used
 
-# Fontconfig
-set(FONTCONFIG_DIR ${CMAKE_MODULE_PATH})
-find_package(FONTCONFIG REQUIRED)
-if(FONTCONFIG_FOUND)
-	message("\tFontConfig Found")
-	target_link_libraries(${PROJECT_NAME} ${FONTCONFIG_LIBRARY})
-	include_directories(${FONTCONFIG_INCLUDE_DIR})
-endif(FONTCONFIG_FOUND)
+
+### Fontconfig
+#
+###   skidoo   Legacy code?   # dpkg-shlibdeps sez "none of this library's symbols are used
+#set(FONTCONFIG_DIR ${CMAKE_MODULE_PATH})
+#find_package(FONTCONFIG REQUIRED)
+#if(FONTCONFIG_FOUND)
+#	message("\tFontConfig Found")
+#	target_link_libraries(${PROJECT_NAME} ${FONTCONFIG_LIBRARY})
+#	include_directories(${FONTCONFIG_INCLUDE_DIR})
+#endif(FONTCONFIG_FOUND)
+
 
 # PAM
 if(USE_PAM)
@@ -134,7 +138,7 @@ endif(USE_CONSOLEKIT)
 # system librarys
 find_library(M_LIB m)
 find_library(RT_LIB rt)
-find_library(CRYPTO_LIB crypt)
+#find_library(CRYPTO_LIB crypt)  # dpkg-shlibdeps sez "none of this library's symbols are used
 
 add_definitions(${SLIM_DEFINITIONS})
 
@@ -142,16 +146,17 @@ add_definitions(${SLIM_DEFINITIONS})
 include_directories(
 	${X11_INCLUDE_DIR}
 	${X11_Xft_INCLUDE_PATH}
-	${X11_Xrender_INCLUDE_PATH}
-	
+#	${X11_Xrender_INCLUDE_PATH}    # dpkg-shlibdeps sez "none of this library's symbols are used
+
 	/*    Using FREETYPE_INCLUDE_DIR_freetype2 directly can cause issues
 	       with newer freetype packages, as it doesn't contain all freetype include dirs.
 	*/
 	#${FREETYPE_INCLUDE_DIR_freetype2}
-	${FREETYPE_INCLUDE_DIRS}
-		
+	#  ^---v
+	${FREETYPE_INCLUDE_DIRS}   #  OUTCOMMENTED, THEN REVERTED    dpkg-shlibdeps sez "none of this library's symbols are used
+
 	${X11_Xmu_INCLUDE_PATH}
-	${ZLIB_INCLUDE_DIR}
+### ${ZLIB_INCLUDE_DIR}   # dpkg-shlibdeps sez "none of this library's symbols are used
 	${JPEG_INCLUDE_DIR}
 	${PNG_INCLUDE_DIR}
 )
@@ -161,12 +166,12 @@ set(X11_Xmu_LIB Xmu)
 target_link_libraries(${PROJECT_NAME}
 	${M_LIB}
 	${RT_LIB}
-	${CRYPTO_LIB}
+#	${CRYPTO_LIB}    # dpkg-shlibdeps sez "none of this library's symbols are used
 	${X11_X11_LIB}
 	${X11_Xft_LIB}
-	${X11_Xrender_LIB}
+#	${X11_Xrender_LIB}      # dpkg-shlibdeps sez "none of this library's symbols are used
 	${X11_Xmu_LIB}
-	${FREETYPE_LIBRARY}
+#	${FREETYPE_LIBRARY}     # dpkg-shlibdeps sez "none of this library's symbols are used
 	${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
 	)
@@ -175,7 +180,7 @@ target_link_libraries(${PROJECT_NAME}
 # slim
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin )
 # man file
-install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
+install(FILES doc/slim.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 # themes directory

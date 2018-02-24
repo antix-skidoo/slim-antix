@@ -1,3 +1,36 @@
+1.4.2 - 2018.02.21
+	*
+
+1.4.1 - 2018.01.18
+	* remove unnecessary declared dependency (libzip)
+	* debian/rules: add "scrot" as Recommends (for F11 screenshot) and
+        "antix-goodies" (provides yad, used by "slim-login" + "antixccslim.sh")
+        and "gtkdialog" (used by "antixccslim.sh").
+        Also, add "urxvt" to Recommends (it is the configured console_cmd).
+        (TODO: specify xterm|urxvt ? remove xterm from Recommends?)
+	* antixccslim.sh: insert test for presence of gtkdialog + yad
+	* slim-login: insert test for presence of yad
+	* optimize existing antiX background.jpg themefile.
+        reduce (35kb>>14kb) and decrease gamma + increase saturation
+	* provide a minimal (6kb solid black) bgimage for 'default' theme
+        and do not remove themes/default dir (keep for user reference)
+	* create a COMPREHENSIVE list of config options/descriptions
+        (install creates /usr/share/doc/slim/OPTIONS_LIST.txt)
+        and add "SEE ALSO: /usr/share/doc/slim directory" into the manpage
+	* add "dh-exec" to build deps (115kb installed size)
+        so that we can use /usr/share/dh-exec/dh-exec-install-rename
+        within the slim.install file
+	* add "scrot" (used for screenshot_cmd) as a Recommends in debian/control
+	* slim.conf: prepend ### to inline comments, to differentiate from
+        lines containing #currently outcommented values
+	* "slim-login" (autologin setup) utility: add sanity check
+        (test whether a home directory matching the typed username exists)
+         and test whether empty username value was submitted
+	* suppress useless/misleading "cancel" buttons within yad errmsg dialogs
+	* antixslimcc.sh: check that current_theme is "antix" and, if not,
+        warn "this background setter utility is effective only when the currently-selected
+        SLiM theme (specified in /etc/slim.conf) is: current_theme  antiX"
+
 1.3.4 - 2012.06.26
 	* Replaced stderr writes function.
 	* Fix numlock control.
@@ -64,13 +97,13 @@
     * Replaced autotools with plain makefile(s)
     * Added 'suspend' command (untested, we don't use it)
     * Added support for %theme variable in login command
-	
+
 1.2.2 - 2005.05.21
     * fix panel drawing on screens <= 1024x768
     * Don't start X server unless valid theme found
     * revert to 'default' of invalid theme specified
     * try all themes from a set if one doesn't work
-    
+
 1.2.1 - 2005.05.17
     * draw input directly on panel
 
@@ -96,8 +129,8 @@
     * added configurable shutdown and reboot messages
     * separated 'Enter username' and 'Enter password' messages
       position.
-    * due to the previous two points, the theme format has 
+    * due to the previous two points, the theme format has
       slightly changed
-    
+
 1.0.0 - 2004.12.07
     * First public SLiM release

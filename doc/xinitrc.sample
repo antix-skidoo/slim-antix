@@ -1,0 +1,33 @@
+### The following variable defines the session which is started if the user
+### does not explicitly select a session.
+### (this is a --sample-- not "as-shipped by antiX")
+DEFAULT_SESSION=twm
+
+case $1 in
+xfce4)
+	exec startxfce4
+	;;
+icewm)
+	icewmbg &
+	icewmtray &
+	exec icewm
+	;;
+wmaker)
+	exec wmaker
+	;;
+blackbox)
+	exec blackbox
+	;;
+*)
+	exec $DEFAULT_SESSION
+	;;
+esac
+
+
+###        FYI
+### ON ANTIX SYSTEM, /etc/X11/xinit/xinitrc CONTAINS THE FOLLOWING
+###   (ALL EXECPT THE LINE SOURCING /etc/X11/Xsession ARE OUTCOMMENTED)
+### global xinitrc file, used by all X sessions started by xinit (startx)
+###
+### invoke global X session script
+#. /etc/X11/Xsession

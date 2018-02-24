@@ -2,20 +2,20 @@ Source: slim
 Section: x11
 Priority: optional
 Maintainer: anticapitalista <antiX@operamail.com>
-Uploaders: Jens Peter Secher <jps@debian.org>
-Build-Depends: debconf, debhelper (>= 9), libjpeg-dev, libpam0g-dev,
-	libpng-dev, libxft-dev, libxmu-dev, po-debconf, sharutils,
-	libck-connector-dev, cmake, freeglut3-dev
+Uploaders: skidoo <email@redact.ed>
+Build-Depends: debconf, debhelper (>= 9), dh-exec, po-debconf,
+	cmake, libpam0g-dev, sharutils, libck-connector-dev, freeglut3-dev,
+	libjpeg-dev, libpng-dev, libxft-dev, libxmu-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/antiX-Linux/slim-antix
 
 Package: slim
 Architecture: any
 Provides: x-display-manager
-Recommends: xterm 
-Suggests: scrot, xauth
+Recommends: xterm, urxvt, scrot, antix-goodies, gtkdialog
+Suggests: xauth
 Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 1.2.9) | debconf-2.0, dbus, consolekit
 Description: desktop-independent graphical login manager for X11
- SLiM aims to be light and simple, although completely configurable
+ SLiM aims to be light and simple, yet is completely configurable
  via themes and via an option file.
  It is particularly suitable for machines that don't require remote logins.

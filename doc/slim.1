@@ -41,7 +41,8 @@ run \fBslim\fP in daemon mode
 preview of the default theme
 .SH STARTING SLIM AT BOOT
 Please refer to documentation of your Operating System to make \fBslim\fP
-automatically startup after the system boots.
+automatically startup after the system boots. Typically, SLiM can be loaded
+on startup by entering it in your daemons array in rc.conf or by modifying inittab
 .SH CONFIGURATION
 Global configuration is stored in the /etc/slim.conf file. See the comments
 inside the file for a detailed explanation of the \fIoptions\fP.
@@ -53,7 +54,7 @@ Special usernames:
 .TP
 .B
 console
-open a xterm console
+open an xterm console (urxvt, in antiX)
 .TP
 .B
 exit
@@ -78,12 +79,13 @@ Available Shortcuts:
 .TP
 .B
 F11
-executes a custom command (by default, takes a screenshot)  
+executes a custom command (by default, takes a screenshot)
 .TP
 .B
 F1
-choose session type (see also: slim.conf file and xinitrc.sample)
-.SH AUTHORS 
+choose session type (see also: slim.conf.antix_orig and xinitrc.sample,
+installed to /usr/share/doc/slim directory)
+.SH AUTHORS
 Simone Rota <sip@varlock.com>
 .PP
 Johannes Winkelmann <jw@tks6.net>

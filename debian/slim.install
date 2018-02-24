@@ -1,12 +1,39 @@
-#antiX
-debian/antiX usr/share/slim/themes/
+#!/usr/bin/dh-exec
 
-debian/local/Xsession.d/20slim_locale etc/X11/Xsession.d
-debian/local/bin/antixccslim.sh usr/local/bin
-debian/local/bin/slim-login usr/local/bin
-debian/local/Xsession.d/slim_login.desktop usr/share/applications/antix 
-debian/local/Xsession.d/slim_wallpaper.desktop usr/share/applications/antix 
-debian/local/Xsession.d/slim.template usr/share/slim
+### template is used by the "slim-login" (autologin setup) utility
+debian/custom/slim.template => usr/share/slim/slim.template
 
-# pam
+### place a copy into docs directory, for reference
+slim.conf => usr/share/doc/slim/slim.conf.antix_orig
+debian/slim.pam => /usr/share/doc/slim/pam.antix_orig
+
+### target dirs are created, if absent, when debhelper parses "slim.dirs"
+debian/slim.logrotate   etc/logrotate.d/slim
+debian/slim.init        etc/init.d/slim
+debian/custom/Xsession.d/20slim_locale    etc/X11/Xsession.d
+
+debian/antiX     usr/share/slim/themes/
+
+### the "slim-login" script performs "slim autologin configuration"
+debian/custom/slim-login        usr/local/bin
+debian/custom/antixccslim.sh    usr/local/bin
+
+debian/custom/slim_login.desktop       usr/share/applications/antix
+debian/custom/slim_wallpaper.desktop   usr/share/applications/antix
+
+doc/pam.sample          usr/share/doc/slim
+doc/xinitrc.sample      usr/share/doc/slim
+doc/ChangeLog           usr/share/doc/slim
+doc/COPYING             usr/share/doc/slim
+doc/OPTIONS_LIST.txt    usr/share/doc/slim
+README                  usr/share/doc/slim
+doc/THEMES              usr/share/doc/slim
+debian/README.Debian    usr/share/doc/slim
+
+### THE FOLLOWING LINE WAS OUTCOMMENTED IN PRIOR slim-antix VERSION
 #pam.sample etc/pam.d/slim
+
+### (pam.sample copy op is also outcommented in debian/rules file)
+###    above, we place a sample copy in docs dir
+### and debhelper copies debian/slim.pam to /etc/pam.d/slim
+doc/pam.sample          etc/pam.d/slim

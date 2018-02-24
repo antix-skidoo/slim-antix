@@ -20,11 +20,13 @@ override_dh_installpam:
 override_dh_install:
 	dh_install --list-missing
 
-	# pam
+	### THE FOLLOWING 2 LINES WERE OUTCOMMENTED IN PRIOR slim-antix VERSION
+	# (pam.sample copy is placed in docs dir instead)
 	#install -D -m 0644  pam.sample \
 		#$(CURDIR)/debian/slim/etc/pam.d/slim
-	# remove COPYRIGHT files.
-	rm -rf \
-		debian/slim/usr/share/slim/themes/default
+
+	###  only 4 files (45kb). Leave 'em, for user reference.
+	#rm -rf \
+	#debian/slim/usr/share/slim/themes/default
 
 override_dh_usrlocal:

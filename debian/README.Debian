@@ -2,14 +2,12 @@
 -----------------
 
 Slim permits the user to type the special username 'console' to popup a terminal
-emulator with the login program (sic) (?within). In the previous packages (<1.3.1)
-the terminal command was set to x-terminal-emulator. That was ill-advised; it allowed
-a terminal like gnome-terminal to be run, which has a feature to open new windows/tabs
-which, instead of running login, resulted in access to a shell with root privileges.
+emulator from within the login program (while the SLiM login screen is displayed).
+In previous versions (<1.3.1), the terminal command was set to x-terminal-emulator.
+That was ill-advised; many terminal programs provide ability to open new
+windows/tabs ~~ essentially granting access to a shell with root privileges.
 
 Regarding this behavior, use of a terminal emulator like xterm is recommended.
 The current SLiM package now (again) defaults to, and recommends, xterm.
 
  Mike Massonnet <email@redact.ed>  Tue, 21 Jul 2009 17:07:20 +0100
- 
-  -- skidoo <email@redact.ed>  Sun, 7 Jul 2018 12:34:56 +0100
