@@ -10,7 +10,7 @@
 [[ -e /usr/local/bin/yad ]] || { echo "yad (provided by 'antix-goodies' package) missing; cannot proceed"; exit 1; }
 [[ -e /usr/bin/gtkdialog ]] || { echo "/usr/bin/gtkdialog missing; cannot proceed"; exit 1; }
 
-if[ ! -w /etc/slim.conf ]; then
+if [ ! -w /etc/slim.conf ]; then
     yad "error" --title "!" --button=OK --text "/etc/slim.conf is missing or not writable\!\n\nunable to proceed"
     exit 1
 fi
