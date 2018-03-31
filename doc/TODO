@@ -1,3 +1,387 @@
-		bump version number (debian/files, debian/changelog, doc/ChangeLog, CMakeLists.txt
+		when bumping version number, must edit: debian/files, debian/changelog, doc/ChangeLog, CMakeLists.txt, README
 
-Feb 23, 2018: I have temporarily blanked-out the copy of TODO file sent to github
+NOTED:
+"remaster-antix" package contains a script which will overwrite slim.conf   {{{{{{{{{{{{{{{{{{{ =============================
+	/usr/local/share/live-files/general-files/etc/slim.conf
+=== remaster-antix: /usr/local/share/live-files/general-files/etc/slim.conf
+
+package "cli-installer-antix" contains a script which will overwrite slim.conf   {{{{{{{{{{{{{{{{{{{ =============================
+	/usr/local/bin/cli-installer
+
+
+FOR FOLLOWUP:
+Currently, the config option "intro_msg" is unused/ignored (and such is noted in the OPTIONS_LIST.txt doc).
+In future versions... put it to use, or delete to it (and "intro_message" refs, within the cpp code)
+
+(RE)CONSIDER
+	 libc-6    allows 32char username, but the current (inherited cfg.h) states      #define INPUT_MAXLENGTH_NAME 30
+
+(RE)CONSIDER
+	 "halt" and "reboot" special usernames require entry of root password... but "console" does not
+
+FOR FOLLOWUP:
+	Toward accommodating HiDPI displays, specify larger font sizes within the shipped theme(s)
+
+
+NOTED:
+/usr/local/bin/UM-set overwrites any (EVERY) line within /etc/slim.conf  which contains  "default_user"   or  "auto_login"
+(these are absent from slim.template, and lines containing these are appended to template and written to /etc/slim.conf
+when user runs the "slim-login" utility) ("Configure autologin" in controlCentre)
+Due to appending, no functional conflict... but this action may confuse a sysadmin who had manually edited slim.conf
+
+
+=======================
+sources consulted (Jan 2018):
+   ~~~ The SLiM display manager is no longer maintained by its original authors.
+   ~~~ The old website (http://slim.berlios.de) is now gone. The last commit to the berlios project site was on October 3rd, 2013.
+https://github.com/bbidulock/slim/commits/master (no Debian/ subdir)
+https://github.com/mati75/slim/tree/master/debian (3yrs stale; probably the debian maintainer's copy)
+https://github.com/florian0/SLiM (3yrs stale; no debian subdir)
+https://github.com/gsingh93/slim-display-manager/commits/master (coupla commits beyond v1.3.6)
+https://github.com/AeroNotix/slim-git (several interesting commits, deviating from 1.3.6)
+https://github.com/iwamatsu/slim (4ys+ stale; no Debian subdir) {---- iwamatsu
+https://github.com/PeteGozz/slim/
+https://github.com/GalliumOS/slim     (this repos is ahead of mati75 repo)
+https://sourceforge.net/projects/slim.berlios/files/slim-1.3.6.tar.gz
+https://bugs.debian.org/cgi-bin/pkgreport.cgi?package=slim
+https://www.freshports.org/x11/slim/  {----- may need to use search (webserver demands referer header?)
+https://github.com/data-modul/slim
+-=-
+https://github.com/berkley4/slim   {{{{{     tailored for Devuan (forked at 1.3.6, no significant changes other than rules hardening)
+https://github.com/Centuriondan/slim   {{{{{   tailored for Devuan (last commit 5yrs ago)
+https://sources.debian.org/patches/slim/1.3.6-5.1/
+https://github.com/gentoo/gentoo/tree/c1d7d7de94aea9f6202473c789c6c2a9422f71aa/x11-misc/slim/files
+https://bugs.freebsd.org/bugzilla/buglist.cgi?bug_status=__all__&content=slim&no_redirect=1&order=Importance&product=Ports%20%26%20Packages&query_format=specific
+noted:  https://bbs.archlinux.org/viewtopic.php?id=65869  "(2009) slim (login manager) fixes and improvements "
+noted:  https://unix.stackexchange.com/questions/151942/slim-login-manager-causes-urxvt-window-to-loose-transparent-opacity-effect
+noted:  MidnightBSD forked slim in 2017 and renamed it to "mlogind"
+https://github.com/bbidulock/xdm/commits/master
+https://github.com/freedesktop/xdm/commits/master
+
+
+========================
+
+patches merged and /or considered:
+
+MERGED: " debian/rules: (hardening) add source fortification, stack protection, relro"
+https://github.com/berkley4/slim/commit/1c2a84e9b19f4947c93d5e2d2670561b2236c9ea
+    and
+https://github.com/berkley4/slim/commit/8b7130122edd0574bf2b909eb29dc229a871cff1
+
+MERGED:   app.cpp "provide comment for longjmp hack"
+https://github.com/chtisgit/slim/commit/3fa4b7773fe9a70f4f5422e20fab1d27f75b445a
+
+MERGED:     "jpeg.c and png.c don't seem to be unused (functionality has moved, to image.cpp)
+             so remove them from CMakeLists.txt (but keep them in the repo
+             until certain they are not needed) "
+https://github.com/chtisgit/slim/commit/302957f8c686dc585724cabc6c1a3e57ee66cb05
+      ^-----------  FOLLOWUP LATER TO DELETE png.c and jepg.c
+
+MERGED:  "Remove erroneous call to pam.end() within child processapp.cpp"  Line 602
+https://github.com/eseverson/slim/commit/7161fb5f1b8397bc8d8ae30f8cae7273e2cc4664
+
+MERGED:  "Fix: fails to build with clang 3.1"   log.h  Line 4
+https://github.com/eseverson/slim/commit/c41326661d74c7301038e7d01f378f1576282ff4
+
+MERGED   "Fixed small memory leak in App::StartServer() "
+https://github.com/bbidulock/slim/commit/df1c2731640f89deb6c71759430b97057626331b
+
+MERGED   " app.cppHandle NULL returns from crypt() "
+https://github.com/bbidulock/slim/commit/fbdfae3b406b1bb6f4e5e440e79b9b8bb8f071fb
+
+MERGED   "cfg.cpp, cfg.h: modify Cfg::getIntOption" (declare 0 as default value)  ============ late merge
+https://github.com/eseverson/slim/commit/c2145c7444a608d2e10bc0327c3ee9310d8b0731
+
+MERGED:   "Fix save root window pixmap id when setting background"  app.cpp     app.h
+https://github.com/eseverson/slim/commit/ea681f011632351e95bd319ec4e98e6d0ce1bf64
+
+MERGED   "Use XftDrawStringUtf8 (vs XftDrawString8)" panel.cpp   Line 607 and Line 610
+https://github.com/eseverson/slim/commit/0343b88bb3080a4e5fa31195c6e5e4ed491a1055
+      ^-----------   FOLLOWUP, PURSUE FULL UNICODE SUPPORT
+
+MERGED  "Fix check of -Wswitch"
+app.cpp
+https://github.com/bbidulock/slim/commit/a8f6f8b6c24b42ddd65a3513af157b41de37921f
+
+MERGED    "panel.cpp: Use var visual   in place of   DefaultVisual(Dpy, Scr) "
+https://github.com/bbidulock/slim/commit/7d43e5668943312b46618767bab0c0c11f48fca6
+
+MERGED:   "add options to support centering of input box text and hiding of cursor" cfg.cpp  panel.cpp
+https://github.com/eseverson/slim/commit/3ad4dc09988dbdd89c6bf70b6a83c4fd029db208
+
+MERGED:
+cfg.cpp   " permit setting a default xsession from .xinitrc "
+https://github.com/iwamatsu/slim/pull/1
+
+sez "don't actually need GLUT lib"
+https://github.com/PeteGozz/slim/commit/e425de4633d50e0d5816bd0b00ee8b0f11351662
+
+
+CONSIDERED:    " Add c++11 flags to CMakeLists and reformat Ck and PAM files
+                to improve readability of the code.
+				Also some changes to the Exception classes from Ck.h and PAM.h "
+https://github.com/chtisgit/slim/commit/bedd3e954783ee3c8019d7ae612f7d4b69795a3f {--- stdc++11
+https://github.com/chtisgit/slim/commit/8ea5e596f13f6a4d7cb5ecb505a0c9f51779b8ea
+https://github.com/chtisgit/slim/commit/ba5fb8a3688dd9df57f08179f2a4e5b1e6b245e9
+https://github.com/chtisgit/slim/commit/1e6df8b79179228faf62fb50df751e8f130b2aab {--- bugged (see his later panel.cpp commit)
+https://github.com/chtisgit/slim/commit/f42c89ab473b19490aa6bf912352fd3aabd12bc1   break/fix shite
+
+
+CONSIDERED:  " app.cpp: handle signal masks between parent and child better "
+https://github.com/bbidulock/slim/commit/fe2a262c7cc5ae01eca8f7bc74f724ca299bf905
+    aw,   ^---  break/fix  ---v
+https://github.com/bbidulock/slim/commit/1cc0acd45254380c606ff69b2b612ee9f3313d2f
+https://github.com/bbidulock/slim/commit/ce3d383ff245d5e401358b99043e38f59a1b5b33
+https://github.com/bbidulock/slim/commit/d3c1697e5803612e68660db7928ef3b75a4658cb
+app.cpp          some final process job control tweaks
+https://github.com/bbidulock/slim/commit/fe2a262c7cc5ae01eca8f7bc74f724ca299bf905    ============         signal handline break/fix
+
+
+
+CONSIDER:    Xrandr support
+		To avoid black screen and enable Optimus configuration, it is required to issue
+		XrandR commands after X started, such as:
+			xrandr --setprovideroutputsource modesetting NVIDIA-0
+			xrandr --auto
+https://github.com/Centuriondan/slim/pull/1
+https://github.com/bbidulock/slim/search?utf8=%E2%9C%93&q=xrandr&type=
+https://github.com/GalliumOS/slim/commit/7084faa4f0b73e2013bfd0f7919618079c1552aa
+(would need to also add prelogin_cmd or pre_session_cmd option?)
+             " add configurable xsetup cmd (support xrandr) following Xserver start cmd "
+https://github.com/folx/slim/commit/a4a52efd32b693e0c85977f91cee3bd91b25885c
+             " supports prelogin_cmd, which could be useful for choosing resolution at first boot "   (xref  xrandr support)
+              yah, maybe used to choose resolution at first boot ?
+https://github.com/mmplayer/SLiM/commit/9105e5f70715cd9b4c6f63186b081987936af554
+Updated multiple monitors fix patch -------v
+https://github.com/GalliumOS/slim/commit/ed0c9374ff06e596c204bdf0a35d2ae09b95053d
+        ^--------v   stumped trying to think of a practical example use for this additional cmd var
+CONSIDER: "add option login_success_cmd"    (the code changes within the commit seems incomplete)
+https://github.com/mmplayer/SLiM/commit/39e52f3cd23b87452b3ecb2f313678be669ffe14
+https://github.com/mmplayer/SLiM/commit/ce27ae284dfca79ba81cec3daa54dfcd0819baa9
+
+
+
+CONSIDER:   "Set X11 priority to -19" (noted: reverted by a later commit) and   "Set X11 sched setting to SCHED_ISO"
+~~~~~~~~~ earlier changelog mentions "Removed x11 priority patch as it isn't needed with rr_interval set to 1"
+https://github.com/GalliumOS/slim/commit/9736240164fe91309f5e54021a20d534e667381d
+https://github.com/GalliumOS/slim/commit/d2288078c40599723870f630bbc59f933249d016
+
+
+
+
+NOT MERGED:  "Add multiline support for config file in Cfg::read"  cfg.cpp   Line 134, various other lines
+https://github.com/eseverson/slim/commit/69e07d32123fdf4c3a8eaaecd21f3ee7a28d19c3
+
+NOT MERGED    "Change common library name, from slim_common to libslim, and add version to library"
+https://github.com/bbidulock/slim/commit/05fe60168c99c0f8f200081290a815d85954f792
+
+NOT MERGED   "panel.cpp: Add support ^H (like backspace)"  30 LOC
+https://github.com/bbidulock/slim/commit/df9bed38e8facb7461c66aee604cbeb4e1b6be51
+
+NOT MERGED    "changes to make slim work [WITH REMOTE SERVERS] as [DOES] xdm login program "
+( NOTED: CONTAINS BREAKING CHANGES TO log.h )      XDMCP
+https://github.com/bbidulock/slim/commit/7c81a8d9972aee1732dc6c5baeb076025da6ac75
+
+NOT MERGED    "Add support thread library "          find_package(Threads)
+cMakeLists.txt        {---------- would have been used only for sliml ock
+https://github.com/bbidulock/slim/commit/7ba0ca986faf0f2d46ced389f86a87e3ba78f740
+
+NOT MERGED    "add upstart support"   debian/slim.upstart    NEW FILE
+https://github.com/mati75/slim/commit/67b5fa1fcfdaaf714dbe765c321291d535accea9
+
+NOT MERGED    	(WormZy tree is 1 commit ahead of    iwamatsu/slim)
+"Applied CMakeLists fix for libslim libraries"  (and systemd service inst… )OCT 2014
+https://github.com/WorMzy/slim/commit/a33d2603e48e494d3a97e01462e3b63303eef84d
+^-------- set(LIBDIR
+	is likely a result of incorporating "sliml ock" module (which I haven't done)
+	fix undefined reference to XmuClientWindowCMakeLists.txt
+https://github.com/mmplayer/SLiM/commit/02f39dc17f2f6296ea7f194aa36444fba4227c87
+     ^--------v
+NOT MERGED
+"install to install root local folder, CMakeLists"
++set(CMAKE_INSTALL_PREFIX "./installroot")
+-set(SYSCONFDIR "/etc")
++set(SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/etc")	...
++if(APP_DEBUG)
++	set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DXNEST_DEBUG")
++endif(APP_DEBUG)	...
+-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin )
++install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+https://github.com/mmplayer/SLiM/commit/4dae8f99382631f800b8b38c80ea9e29f8cb1d5c
+
+NOT MERGED =========autogen.sh    (new file)
++#!/bin/sh
++#apt-get build-dep slim   #================ already declared in our debian/control file
++#apt-get install libpng-dev
++#
++###rm -rf build/           ============= don't delete last build files
++###mkdir build	+cd build
++if [ "$1" = "debug" ];then	+#cmake ..
+-DUSE_PAM=yes
+-DAPP_DEBUG=yes
+-DCMAKE_BUILD_TYPE=Debug    {--------  ###  ?EQUIVALENT TO PRE-EXISTING  debian/files:1:slim-dbgsym_1.4.2_amd64.deb debug extra
++#cmake ..
+-DAPP_DEBUG=yes
+-DCMAKE_BUILD_TYPE=Debug
++cmake ..
+-DUSE_CONSOLEKIT=yes
++else
++cmake ..
++fi
++make
++make install
+   ^--------v
+https://github.com/mmplayer/SLiM/commit/f5852b865e42b1b849c302bdd03e84386a54f236
+https://github.com/mmplayer/SLiM/commit/1f08b549fd7aa2ea7ebecaca5a79f6b41535cd8f
+
+NOT MERGED:  " if session is not set, use default session (DUH?) "
+https://github.com/mmplayer/SLiM/commit/e06bddf72f593828663807846ca4a2db5b1cd41c
+and
+NOT MERGED   "Use the first session designated in /etc/slim.conf as the default session"
+https://github.com/esjeon/slim-debian/commit/372d6272a42c55e43e07c64a2d74b88658bbc00f
+
+NOT MERGED ================ cuz no sliml ock for us
+Ignore xrandr events if the mode isn't Mode_Lock
+https://github.com/GalliumOS/slim/commit/7084faa4f0b73e2013bfd0f7919618079c1552aa
+
+NOT MERGED  " slim.conf xserver_arguments  -nolisten tcp -core -dpi 133 "
+https://github.com/antix-skidoo/slim-antix/blob/master/slim.conf
+
+NOT MERGED
+Updated multiple monitors fix patch    {----------------- ?already in mati75?  NO.
+https://github.com/GalliumOS/slim/commit/ed0c9374ff06e596c204bdf0a35d2ae09b95053d
+
+NOT MERGED
+support show cover (make default of showing a cover image b4 login FALSE)     panelpng = themedir +"/cover.png";   ???????  replaces bgimage? If so.... why???
+https://github.com/mmplayer/SLiM/commit/3fafa4f8a5c94c147f2aa0de20f8edfa27e3ac70
+https://github.com/mmplayer/SLiM/commit/b78ef4dcdcabac9c91d28388827626b75b5856dd   {----------- depends on slimlock module?
+
+NOT MERGED   " slimlocck.1        fix  minux sign used as a dash "
+https://github.com/mati75/slim/blob/master/debian/patches/fix-hyphen-used-as-minus-sign.patch
+
+NOT MERGED
+  +-# Executed when pressing F11 (requires imagemagick)
+  +-screenshot_cmd      import -window root /slim.png
+  ++# Executed when pressing F11 (requires scrot)
+  ++screenshot_cmd      scrot /root/slim.png
+debian/patches/disable_session_change_and_ss.patch    disables F1
+https://github.com/GalliumOS/slim/commit/49efe314742aad1bdfccf4aae7accae16fc8004a
+
+NOT MERGED      strips out the F1 (change session) and F11 (take screenshot NOT US) keybinds
+https://github.com/GalliumOS/slim/commit/49efe314742aad1bdfccf4aae7accae16fc8004a
+
+NOT MERGED  app.cpp
+	- pam.set_item(PAM::Authenticator::User, "");
+	+ pam.set_item(PAM::Authenticator::User, NULL);
+https://github.com/bbidulock/slim/commit/43bcd57e239c616e0408b34e4d68ec71ebdad96d
+and  "illegal to set anything to null with pam_set_item"
+https://github.com/bbidulock/slim/commit/48f4865da05c5595290046d6328512eb46f2b1ee     -----v  dupe
+
+NOT MERGED:   =================   merit?     or   are these just break/fix commits
+   app.cpp          catch(PAM::Cred_Exception        RETURN (instead of exit(ERR_EXIT)
+    ^----------- and other changes
+https://github.com/bbidulock/slim/commit/f05619b04ce3fe6a2672a5a18a40f6837aca45e6
+https://github.com/bbidulock/slim/commit/707a4bbb961c2587a1c1108bf5ecfa5e7030e9d9             -----v  dupe
+https://github.com/bbidulock/slim/commit/6146319b68dd7098d79dcc75037ab8ffa56b356e             -----v  dupe
+
+NOT MERGED   various files   PAM handling   and much systemd... and   sli mlock
+     open and close user session in the parent
+https://github.com/bbidulock/slim/commit/707a4bbb961c2587a1c1108bf5ecfa5e7030e9d9
+https://github.com/bbidulock/slim/commit/6146319b68dd7098d79dcc75037ab8ffa56b356e             -----^  dupe
+https://github.com/bbidulock/slim/commit/f05619b04ce3fe6a2672a5a18a40f6837aca45e6             -----^  dupe
+https://github.com/bbidulock/slim/commit/48f4865da05c5595290046d6328512eb46f2b1ee     -----^  dupe
+
+NOT MERGED   "app.cpp and cfg.cpp    add option for disabling exit command"
+https://github.com/AeroNotix/slim-git/commit/10ee553756ba7bf8eee108d18074fb22abd0f556
+
+NOT MERGED    "Use a coord class instead of separate integers"  (saves 50LOC, become terse to read)
+several files affected
+https://github.com/AeroNotix/slim-git/commit/94668501fbe6d9871b33d1eda76f24d55a3452b7
+
+NOT MERGED ========
+app.cpp      Move initialization into the initialization list
+https://github.com/AeroNotix/slim-git/commit/737bd9c62c82064eb322bdf0869983a10f7d6213
+
+NOT MERGED (trivial: perform Declaration and definition in a single line)
+panel.cpp
+https://github.com/AeroNotix/slim-git/commit/e459db9de91e959ecb787f00cc7c2bded1c7514f
+  also
+  "Use an initializer list instead of assigning members in the ctor body"
+https://github.com/AeroNotix/slim-git/commit/a19f705cb053afe2b82c435ae53858901a26ebec
+
+ NOT MERGED    "Use a coord class instead of separate integers"  (saves 50LOC, become terse to read)
+several files affected
+https://github.com/AeroNotix/slim-git/commit/94668501fbe6d9871b33d1eda76f24d55a3452b7
+
+NOT MERGED:    app.cpp        App::StopServer() {   if (existing_server) return;"do not try to stop existing servers"
+     ^------ i reckon this is aready handled adequately elsewhere (and the commit would break the "testing" case)
+https://github.com/bbidulock/slim/search?utf8=%E2%9C%93&q=existing_server&type=
+https://github.com/bbidulock/slim/commit/5801c67ef414f1be6375ee267e5dc04d313905b9
+	     app.cpp:Line 311   testing (theme preview) mode is hardcoded to use 1280x1024?
+
+
+
+NOTED
+"Set x11 priority to -19 (Changed setting sched to SCHED_ISO to setpriority) "
+       setpriority(PRIO_PROCESS, ServerPID, -19);
+           ^------- this line replaces the following (as seen in our code)   sched_setscheduler(ServerPID, SCHED_ISO, &param); WHERE PARAM=0
+~~~~~~~~~ earlier changelog mentions "Removed x11 priority patch as it isn't needed with rr_interval set to 1"
+https://github.com/GalliumOS/slim/commit/9736240164fe91309f5e54021a20d534e667381d
+https://github.com/GalliumOS/slim/commit/d2288078c40599723870f630bbc59f933249d016
+
+
+NOTED
+https://github.com/bbidulock/slim
+   ^------------ adds stuffs not in mati75 repo, e.g.	 	pam-autologin.sample
+ 	    "do no use xdm's greeter pam file"		pam-greeter.sample
+   ^----------- separate branches for   systemd   and   for     xdm
+   ^-------- no debian subdir
+
+NOTED   " modified slim to fit multi screen display for archlinux "
+https://github.com/Hacksign/slim-1.3.6
+(repo contains only initial commit    Nov 14, 2015) (full set of 1.3.6 files, no debian subdir)
+
+
+NOTED    "Disabled tty locking by default"  "Add support ^H (like backspace)"
+https://github.com/GalliumOS/slim/commit/f8738a61362dbc39e413bae3a494c497f72755a3
+^-------- this repo is 1.3.6   WITH   debian subdir, and is xx commits ahead of "mati75" repo
+         1.3.7 - 2015.10.22
+	         * Changes for GalliumOS
+	 	* Added XRandr support for resizing   sli mlock
+	         * Disabled tty locking by default
+	         * Run session stop command even if login command fails
+	         * Various fixes and changes
+	 1.3.6 - 2013.10.01
+	 	* Merge   sli mlock.
+	 	* Add support ^H (like backspace).
+
+
+NOTED
+https://aur.archlinux.org/packages/slim-unicode/      {-------- trailing slash required
+https://aur.archlinux.org/cgit/aur.git/tree/slim-utf8.patch?h=slim-unicode
+https://aur.archlinux.org/cgit/aur.git/tree/slim-unicode.patch?h=slim-unicode
+
+
+
+NEW FILE NOT ADDED ".gitignore ( ignore built files)"
+CMakeCache.txt
+^-------v
+CMakeFiles/
+Makefile
+cmake_install.cmake
+slim
+themes/CMakeFiles/
+themes/Makefile
+themes/cmake_install.cmake
+themes/default/CMakeFiles/
+themes/default/Makefile
+themes/default/cmake_install.cmake
+
+
+
+
+==========  I was unable to incorporate the following two (due to significantly different Panel.cpp)
+https://aur.archlinux.org/cgit/aur.git/tree/slim-utf8.patch?h=slim-unicode
+https://aur.archlinux.org/cgit/aur.git/tree/slim-unicode.patch?h=slim-unicode
+but did merge    "panel.cpp    UTF8   support in welcome_message"   XftDrawStringUtf8
+https://github.com/AeroNotix/slim-git/commit/6a8da94f038ca0fee04403f69135b052954c45fb

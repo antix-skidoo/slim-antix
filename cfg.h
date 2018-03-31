@@ -32,11 +32,13 @@ public:
     const std::string& getError() const;
     std::string& getOption(std::string option);
     int getIntOption(std::string option);
+    //     ^---v     THIS IS A LATE CHANGE, PERHAPS UNNEDED. CONSIDER REVERTING THIS LATER
+    //int getIntOption(std::string option, int defaultVal = 0);
     std::string getWelcomeMessage();
 
     static int absolutepos(const std::string& position, int max, int width);
     static int string2int(const char* string, bool* ok = 0);
-    static void split(std::vector<std::string>& v, const std::string& str, 
+    static void split(std::vector<std::string>& v, const std::string& str,
                       char c, bool useEmpty=true);
     static std::string Trim(const std::string& s);
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-
+###    not changed for slim v1.4.2
 # Largely adapted from xdm's init script:
 # Copyright 1998-2002, 2004, 2005 Branden Robinson <branden@debian.org>.
 # Copyright 2006 Eugene Konev <ejka@imfi.kspu.ru>

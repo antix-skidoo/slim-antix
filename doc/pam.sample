@@ -12,4 +12,6 @@ session         optional        pam_ck_connector.so
 # THE ABOVE DOES NOT REFLECT THE CONTENT WRITTEN TO
 # /etc/pam.d/slim BY THE ANTIX-PACKAGED VERSION OF SLIM.
 # REFER TO debian/slim.pam IN THE slim-antix SOURCE PACKAGE
-# OR THE INSTALLED /usr/share/doc/slim/pam.antix_orig FILE
+# OR THE INSTALLED /usr/share/doc/slim/slim.pam__antix_orig FILE
+###
+### slim v1.4.2

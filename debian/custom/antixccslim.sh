@@ -1,6 +1,7 @@
 #!/bin/bash
-# File Name: slimbackground.sh
+# File Name: antixccslim.sh
 # Purpose: provide a GUI wherein a user can set slim login background
+###  modified for slim v1.4.2
 
 # Check xserver is running and user is root
 [[ $DISPLAY ]] || { echo "There is no xserver running. Exiting..." ; exit 1 ; }

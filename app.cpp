@@ -57,10 +57,10 @@ int conv(int num_msg, const struct pam_message **msg,
                     case Panel::Login:
                         (*resp)[i].resp=strdup(panel->GetName().c_str());
                         break;
-		    default:
-			break;
-		}
+            default:
                 break;
+        }
+            break;
 
             case PAM_PROMPT_ECHO_OFF:
                 // We assume PAM is asking for the password
@@ -80,9 +80,7 @@ int conv(int num_msg, const struct pam_message **msg,
 
             case PAM_ERROR_MSG:
             case PAM_TEXT_INFO:
-                // We simply write these to the log
-                // TODO: Maybe we should simply ignore them
-                logStream << APPNAME << ": " << msg[i]->msg << endl;
+                logStream << "SLiM: " << msg[i]->msg << endl;
                 break;
         }
         if (result!=PAM_SUCCESS) break;
@@ -108,7 +106,7 @@ int xioerror(Display *disp) {
 }
 
 void CatchSignal(int sig) {
-    logStream << APPNAME << ": unexpected signal " << sig << endl;
+    logStream << "SLiM: unexpected signal " << sig << endl;
 
     if (LoginApp->isServerStarted())
         LoginApp->StopServer();
@@ -129,7 +127,7 @@ App::App(int argc, char** argv)
 App::App(int argc, char** argv)
   :
 #endif
-    mcookiesize(32)		// Must be divisible by 4
+    mcookiesize(32)   // Must be divisible by 4
 {
     int tmp;
     ServerPID = -1;
@@ -145,11 +143,11 @@ App::App(int argc, char** argv)
     // Note: we force a option for nodaemon switch to handle "-nodaemon"
     while((tmp = getopt(argc, argv, "vhp:n:d?")) != EOF) {
         switch (tmp) {
-        case 'p':    // Test theme
+        case 'p':
             testtheme = optarg;
             testing = true;
             if (testtheme == NULL) {
-                logStream << "The -p option requires an argument" << endl;
+                std::cout << "The -p  _theme_testing_  option requires an argument" << std::endl;
                 exit(ERR_EXIT);
             }
             break;
@@ -161,25 +159,26 @@ App::App(int argc, char** argv)
             force_nodaemon = true;
             break;
         case 'v':    // Version
-            std::cout << APPNAME << " version " << VERSION << endl;
+            std::cout << "SLiM version " << VERSION << std::endl;
             exit(OK_EXIT);
             break;
         case '?':    // Illegal
-            logStream << endl;
-        case 'h':   // Help
-            logStream << "usage:  " << APPNAME << " [option ...]" << endl
-            << "options:" << endl
-            << "    -d: daemon mode" << endl
-            << "    -nodaemon: no-daemon mode" << endl
-            << "    -v: show version" << endl
-            << "    -p /path/to/theme/dir: preview theme" << endl;
+            std::cout << "use h for help, or see installed docs /usr/share/docs/slim/"<< std::endl;
+            exit(OK_EXIT);
+        case 'h':   // Help      skidoo    we don't handle longform options?
+            std::cout << "usage:  " << "SLiM [option ...] \n"
+            << "options: \n"
+            << "    -d: daemon mode \n"
+            << "    -nodaemon: no-daemon mode \n"
+            << "    -v: show version \n"
+            << "    -p /path/to/theme/dir \n          test (preview) a specific theme \n" << std::endl;
             exit(OK_EXIT);
             break;
         }
     }
 #ifndef XNEST_DEBUG
     if (getuid() != 0 && !testing) {
-        logStream << APPNAME << ": only root can run this program" << endl;
+        std::cout << "SLiM: only root can run this program" << std::endl;
         exit(ERR_EXIT);
     }
 #endif /* XNEST_DEBUG */
@@ -194,7 +193,7 @@ void App::Run() {
     char* p = getenv("DISPLAY");
     if (p && p[0]) {
         DisplayName = p;
-        cout << "Using display name " << DisplayName << endl;
+        cout << "Using the display named " << DisplayName << std::endl;
     }
 #endif
 
@@ -208,6 +207,7 @@ void App::Run() {
     themeName = "";
     if (testing) {
         themeName = testtheme;
+        std:cout << "SLiM: testing theme " << testtheme << std::endl;   // late addition
     } else {
         themebase = string(THEMESDIR) + "/";
         themeName = cfg->getOption("current_theme");
@@ -228,32 +228,30 @@ void App::Run() {
         pam.set_item(PAM::Authenticator::Requestor, "root");
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
         exit(ERR_EXIT);
     };
 #endif
 
-    bool loaded = false;
-    while (!loaded) {
+    bool themeloaded = false;
+    while (!themeloaded) {
         themedir =  themebase + themeName;
         themefile = themedir + THEMESFILE;
         if (!cfg->readConf(themefile)) {
             if (themeName == "default") {
-                logStream << APPNAME << ": Failed to open default theme file "
-                     << themefile << endl;
+                logStream << "SLiM: Failed to open default theme file " << themefile << endl;
                 exit(ERR_EXIT);
             } else {
-                logStream << APPNAME << ": Invalid theme in config: "
-                     << themeName << endl;
+                logStream << "SLiM: Invalid theme specified in config: " << themeName << endl;
                 themeName = "default";
             }
         } else {
-            loaded = true;
+            themeloaded = true;
         }
     }
 
     if (!testing) {
-        // Create lock file
+        // Create lockfile
         LoginApp->GetLock();
 
         // Start x-server
@@ -274,7 +272,7 @@ void App::Run() {
         // Daemonize
         if (daemonmode) {
             if (daemon(0, 0) == -1) {
-                logStream << APPNAME << ": " << strerror(errno) << endl;
+                logStream << "SLiM: " << strerror(errno) << endl;
                 exit(ERR_EXIT);
             }
         }
@@ -282,7 +280,7 @@ void App::Run() {
         OpenLog();
 
         if (daemonmode)
-            UpdatePid();
+            UpdatePid(); // howdy   hmm, i have never noticed the pid changing, ever
 
         CreateServerAuth();
         StartServer();
@@ -292,8 +290,7 @@ void App::Run() {
 
     // Open display
     if((Dpy = XOpenDisplay(DisplayName)) == 0) {
-        logStream << APPNAME << ": could not open display '"
-             << DisplayName << "'" << endl;
+        logStream << "SLiM: could not open display '" << DisplayName << "'" << endl;
         if (!testing) StopServer();
         exit(ERR_EXIT);
     }
@@ -302,7 +299,7 @@ void App::Run() {
     Scr = DefaultScreen(Dpy);
     Root = RootWindow(Dpy, Scr);
 
-    // Intern _XROOTPMAP_ID property
+    // Internal _XROOTPMAP_ID property
     BackgroundPixmapId = XInternAtom(Dpy, "_XROOTPMAP_ID", False);
 
     // for tests we use a standard window
@@ -348,7 +345,7 @@ void App::Run() {
 
     while(1) {
         if(panelclosed) {
-            // Init root
+            // Initialize root window
             setBackground(themedir);
 
             // Close all clients
@@ -358,22 +355,20 @@ void App::Run() {
             }
 
             // Show panel
-            LoginPanel->OpenPanel();
+            LoginPanel->OpenPanel(themedir);
         }
 
         LoginPanel->Reset();
-
 
         if (firstloop && cfg->getOption("default_user") != "") {
             LoginPanel->SetName(cfg->getOption("default_user") );
         }
 
-
         if (!AuthenticateUser(focuspass && firstloop)){
             panelclosed = 0;
             firstloop = false;
+            LoginPanel->WarnCapslock(4);
             LoginPanel->ClearPanel();
-            XBell(Dpy, 100);
             continue;
         }
 
@@ -392,19 +387,19 @@ void App::Run() {
                 Login();
                 break;
             case Panel::Console:
-                Console();
+                Console();     // yes pam check
                 break;
             case Panel::Reboot:
-                Reboot();
+                Reboot();      // yes pam check
                 break;
             case Panel::Halt:
-                Halt();
+                Halt();        // yes pam check
                 break;
             case Panel::Suspend:
-                Suspend();
+                Suspend();     // no pam check
                 break;
             case Panel::Exit:
-                Exit();
+                Exit();        // yes pam check
                 break;
             default:
                 break;
@@ -428,11 +423,11 @@ bool App::AuthenticateUser(bool focuspass){
             default:
                 break;
         };
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
         return false;
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
         exit(ERR_EXIT);
     };
     return true;
@@ -444,7 +439,7 @@ bool App::AuthenticateUser(bool focuspass){
         switch(LoginPanel->getAction()){
             case Panel::Exit:
             case Panel::Console:
-                logStream << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
+                logStream << "SLiM: Got a special command (" << LoginPanel->GetName() << ")" << endl;
                 return true; // <--- This is simply fake!
             default:
                 break;
@@ -530,11 +525,11 @@ void App::Login() {
     }
     catch(PAM::Cred_Exception& e){
         // Credentials couldn't be established
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
         return;
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
         exit(ERR_EXIT);
     };
 #else
@@ -572,7 +567,7 @@ void App::Login() {
         pam.setenv("XAUTHORITY", xauthority.c_str());
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
         exit(ERR_EXIT);
     }
 #endif
@@ -583,7 +578,7 @@ void App::Login() {
         ck.open_session(DisplayName, pw->pw_uid);
     }
     catch(Ck::Exception &e) {
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
         exit(ERR_EXIT);
     }
 #endif
@@ -624,8 +619,7 @@ void App::Login() {
         child_env[n - 1] = StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
         child_env[n] = NULL;
 # endif /* USE_CONSOLEKIT */
-	    //      v--- skidoo nixed
-        //pam.end();
+
 #else
 
 # ifdef USE_CONSOLEKIT
@@ -679,8 +673,8 @@ void App::Login() {
     int status;
     while (wpid != pid) {
         wpid = wait(&status);
-		if (wpid == ServerPID)
-			xioerror(Dpy);	// Server died, simulate IO error
+        if (wpid == ServerPID)
+            xioerror(Dpy); // Server died, simulate IO error
     }
     if (WIFEXITED(status) && WEXITSTATUS(status)) {
         LoginPanel->Message("Failed to execute login command");
@@ -698,7 +692,7 @@ void App::Login() {
         ck.close_session();
     }
     catch(Ck::Exception &e) {
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
     };
 #endif
 
@@ -707,11 +701,11 @@ void App::Login() {
         pam.close_session();
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
     };
 #endif
 
-// Close all clients
+    // Close all clients
     KillAllClients(False);
     KillAllClients(True);
 
@@ -740,7 +734,7 @@ void App::Reboot() {
         pam.end();
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
     };
 #endif
 
@@ -762,7 +756,7 @@ void App::Halt() {
         pam.end();
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
     };
 #endif
 
@@ -780,6 +774,7 @@ void App::Halt() {
 void App::Suspend() {
     sleep(1);
     system(cfg->getOption("suspend_cmd").c_str());
+    // no feedback provided in case conf file contains an invalid cmdstring
 }
 
 
@@ -803,15 +798,16 @@ void App::Console() {
 void App::Exit() {
 #ifdef USE_PAM
     try{
-        pam.end();
+        pam.end();  // skidoo   ?will prompt for root auth?
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
     };
 #endif
 
     if (testing) {
-        const char* testmsg = "This is a test message :-)";
+        //const char* testmsg = "This is a test message :-)";
+        const char* testmsg= "¥·£·€·$·¢·₡·₢·₣·₤·₥·₦·₧·₨·₩·₪·₫·₭·₮·₯·₹";
         LoginPanel->Message(testmsg);
         sleep(3);
         delete LoginPanel;
@@ -836,13 +832,13 @@ void App::RestartServer() {
         pam.end();
     }
     catch(PAM::Exception& e){
-        logStream << APPNAME << ": " << e << endl;
+        logStream << "SLiM: " << e << endl;
     };
 #endif
 
     StopServer();
     RemoveLock();
-	while (waitpid(-1, NULL, WNOHANG) > 0); // Collects all dead childrens
+	while (waitpid(-1, NULL, WNOHANG) > 0); // Collects all dead children
     Run();
 }
 
@@ -873,7 +869,7 @@ void App::KillAllClients(Bool top) {
     }
     XFree((char *)children);
 
-    XSync(Dpy, 0);
+    XSync(Dpy, 0);  // zero instructs XSync to NOT discard all events in the event queue
     XSetErrorHandler(NULL);
 }
 
@@ -889,9 +885,9 @@ int App::ServerTimeout(int timeout, char* text) {
             break;
         if(timeout) {
             if(i == 0 && text != lasttext)
-                logStream << endl << APPNAME << ": waiting for " << text;
+                logStream << "SLiM: waiting for " << text << endl;
             else
-                logStream << ".";
+                logStream << "." << endl;
         }
         if(timeout)
             sleep(1);
@@ -954,8 +950,7 @@ int App::StartServer() {
         ++pos;
 
         if (argc+1 >= MAX_XSERVER_ARGS) {
-            // ignore _all_ arguments to make sure the server starts at
-            // all
+            // ignore _all_ arguments to make sure the server starts at all
             argc = 1;
             break;
         }
@@ -972,7 +967,7 @@ int App::StartServer() {
     }
 
     if (!hasVtSet && daemonmode) {
-        server[argc++] = (char*)"vt07";
+        server[argc++] = (char*)"vt07";  // howdy    freebsd wants vt09 ?
     }
     server[argc] = NULL;
 
@@ -985,7 +980,7 @@ int App::StartServer() {
 
 
         execvp(server[0], server);
-        logStream << APPNAME << ": X server could not be started" << endl;
+        logStream << "SLiM: X server could not be started" << endl;
         exit(ERR_EXIT);
         break;
 
@@ -1001,7 +996,7 @@ int App::StartServer() {
 
         // Wait for server to start up
         if(WaitForServer() == 0) {
-            logStream << APPNAME << ": unable to connect to X server" << endl;
+            logStream << "SLiM: unable to connect to X server" << endl;
             StopServer();
             ServerPID = -1;
             exit(ERR_EXIT);
@@ -1009,8 +1004,6 @@ int App::StartServer() {
         break;
     }
 
-    //  skidoo: the following change reputedly fixes a small memory leak
-    //delete args;
     delete [] args;
 
     serverStarted = true;
@@ -1019,9 +1012,16 @@ int App::StartServer() {
 }
 
 
-jmp_buf CloseEnv;
-int IgnoreXIO(Display *d) {
-    logStream << APPNAME << ": connection to X server lost." << endl;
+
+  /* Ugly hack, but...
+   XCloseDisplay (in StopServer) might call the IOErrorHandler (IgnoreXIO)
+   When that handler returns the program aborts, though
+   so we save the state before calling XCloseDisplay using setjmp and
+   restore it in the handler using longjmp
+  */
+static jmp_buf CloseEnv;
+static int IgnoreXIO(Display *d) {
+    logStream << "SLiM: connection to X server lost." << endl;
     longjmp(CloseEnv, 1);
 }
 
@@ -1036,13 +1036,13 @@ void App::StopServer() {
 
     // Catch X error
     XSetIOErrorHandler(IgnoreXIO);
-    if(!setjmp(CloseEnv) && Dpy)
+    if(setjmp(CloseEnv) == 0 && Dpy != nullptr)
         XCloseDisplay(Dpy);
 
     // Send HUP to process group
     errno = 0;
     if((killpg(getpid(), SIGHUP) != 0) && (errno != ESRCH))
-        logStream << APPNAME << ": can't send HUP to process group " << getpid() << endl;
+        logStream << "SLiM: can't send HUP to process group " << getpid() << endl;
 
     // Send TERM to server
     if(ServerPID < 0)
@@ -1050,7 +1050,7 @@ void App::StopServer() {
     errno = 0;
     if(killpg(ServerPID, SIGTERM) < 0) {
         if(errno == EPERM) {
-            logStream << APPNAME << ": can't kill X server" << endl;
+            logStream << "SLiM: can't kill X server" << endl;
             exit(ERR_EXIT);
         }
         if(errno == ESRCH)
@@ -1063,7 +1063,7 @@ void App::StopServer() {
         return;
     }
 
-    logStream << endl << APPNAME << ":  X server slow to shut down, sending KILL signal." << endl;
+    logStream << "SLiM:  X server slow to shut down, sending KILL signal." << endl;
 
     // Send KILL to server
     errno = 0;
@@ -1074,15 +1074,14 @@ void App::StopServer() {
 
     // Wait for server to die
     if(ServerTimeout(3, (char*)"server to die")) {
-        logStream << endl << APPNAME << ": can't kill server" << endl;
+        logStream << "SLiM: can't kill server" << endl;
         exit(ERR_EXIT);
     }
     logStream << endl;
 }
 
 
-void App::blankScreen()
-{
+void App::blankScreen() {
     GC gc = XCreateGC(Dpy, Root, 0, 0);
     XSetForeground(Dpy, gc, BlackPixel(Dpy, Scr));
     XFillRectangle(Dpy, Root, gc, 0, 0,
@@ -1096,49 +1095,48 @@ void App::blankScreen()
 void App::setBackground(const string& themedir) {
     string filename;
     filename = themedir + "/background.png";
-    image = new Image;
-    bool loaded = image->Read(filename.c_str());
-    if (!loaded){ // try jpeg if png failed
+    bimage = new Image;
+    bool bimgloaded = bimage->Read(filename.c_str());
+    if (!bimgloaded){
         filename = "";
         filename = themedir + "/background.jpg";
-        loaded = image->Read(filename.c_str());
+        bimgloaded = bimage->Read(filename.c_str());
     }
-    if (loaded) {
+    if (bimgloaded) {
         string bgstyle = cfg->getOption("background_style");
-        if (bgstyle == "stretch") {
-            image->Resize(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
-        } else if (bgstyle == "tile") {
-            image->Tile(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
-        } else if (bgstyle == "center") {
+        if (bgstyle == "stretch" || bgstyle == "stretched") {   // skidoo   late change   (undocumented)
+            bimage->Resize(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
+        } else if (bgstyle == "tile" || bgstyle == "tiled") {   //  skidoo late change   (undocumented)
+            bimage->Tile(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
+        } else if (bgstyle == "center" || bgstyle == "centered") {   // skidoo  late change   (undocumented)
             string hexvalue = cfg->getOption("background_color");
             hexvalue = hexvalue.substr(1,6);
-            image->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
+            bimage->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
                         hexvalue.c_str());
-        } else { // plain color or error
+        } else {  // solidcolor or error
             string hexvalue = cfg->getOption("background_color");
             hexvalue = hexvalue.substr(1,6);
-            image->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
+            bimage->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
                         hexvalue.c_str());
         }
-        Pixmap p = image->createPixmap(Dpy, Scr, Root);
+        Pixmap p = bimage->createPixmap(Dpy, Scr, Root);
         XSetWindowBackgroundPixmap(Dpy, Root, p);
-	XChangeProperty(Dpy, Root, BackgroundPixmapId, XA_PIXMAP, 32,
-		PropModeReplace, (unsigned char *)&p, 1);
+        XChangeProperty(Dpy, Root, BackgroundPixmapId, XA_PIXMAP, 32,
+                   PropModeReplace, (unsigned char *)&p, 1);
     }
     XClearWindow(Dpy, Root);
 
     XFlush(Dpy);
-    delete image;
+    delete bimage;
 }
 
 // Check if there is a lockfile and a corresponding process
 void App::GetLock() {
     std::ifstream lockfile(cfg->getOption("lockfile").c_str());
     if (!lockfile) {
-        // no lockfile present, create one
         std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
         if (!lockfile) {
-            logStream << APPNAME << ": Could not create lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
+            logStream << "SLiM: Could not create lockfile: " << cfg->getOption("lockfile").c_str() << std::endl;
             exit(ERR_EXIT);
         }
         lockfile << getpid() << std::endl;
@@ -1152,13 +1150,13 @@ void App::GetLock() {
             // see if process with this pid exists
             int ret = kill(pid, 0);
             if (ret == 0 || (ret == -1 && errno == EPERM) ) {
-                logStream << APPNAME << ": Another instance of the program is already running with PID " << pid << std::endl;
+                logStream << "SLiM: Another instance of the program is already running ~~ PID " << pid << std::endl;
                 exit(0);
             } else {
-                logStream << APPNAME << ": Stale lockfile found, removing it" << std::endl;
+                logStream << "SLiM: Stale lockfile found, removing it" << std::endl;
                 std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
                 if (!lockfile) {
-                    logStream << APPNAME << ": Could not create new lock file: " << cfg->getOption("lockfile") << std::endl;
+                    logStream << "SLiM: Could not create new lockfile: " << cfg->getOption("lockfile") << std::endl;
                     exit(ERR_EXIT);
                 }
                 lockfile << getpid() << std::endl;
@@ -1173,34 +1171,27 @@ void App::RemoveLock() {
     remove(cfg->getOption("lockfile").c_str());
 }
 
-// Get server start check flag.
+// Get server start check flag
 bool App::isServerStarted() {
     return serverStarted;
 }
 
-// Redirect stdout and stderr to log file
+// Redirect stdout and stderr to logfile
 void App::OpenLog() {
-
+    // could set the buffers to immediate write, instead of just flushing on every << operation.
     if ( !logStream.openLog( cfg->getOption("logfile").c_str() ) ) {
-        logStream <<  APPNAME << ": Could not accesss log file: " << cfg->getOption("logfile") << endl;
+        logStream << "SLiM: Could not accesss log file: " << cfg->getOption("logfile") << endl;
         RemoveLock();
         exit(ERR_EXIT);
     }
-    //
-    // I should set the buffers to imediate write, but I just flush on every
-    // << operation.
-    //
-    //
 }
 
-// Relases stdout/err
+// Releases stdout/err
 void App::CloseLog(){
-	// Simply closing the log
-	logStream.closeLog();
+    logStream.closeLog();
 }
 
-string App::findValidRandomTheme(const string& set)
-{
+string App::findValidRandomTheme(const string& set) {
     // extract random theme from theme set; return empty string on error
     string name = set;
     struct stat buf;
@@ -1221,8 +1212,7 @@ string App::findValidRandomTheme(const string& set)
         themefile = string(THEMESDIR) +"/" + name + THEMESFILE;
         if (stat(themefile.c_str(), &buf) != 0) {
             themes.erase(find(themes.begin(), themes.end(), name));
-            logStream << APPNAME << ": Invalid theme in config: "
-                 << name << endl;
+            logStream << "SLiM: Invalid theme in config: " << name << endl;
             name = "";
         }
     } while (name == "" && themes.size());
@@ -1230,10 +1220,7 @@ string App::findValidRandomTheme(const string& set)
 }
 
 
-void App::replaceVariables(string& input,
-               const string& var,
-               const string& value)
-{
+void App::replaceVariables(string& input, const string& var, const string& value) {
     string::size_type pos = 0;
     int len = var.size();
     while ((pos = input.find(var, pos)) != string::npos) {
@@ -1247,7 +1234,7 @@ void App::replaceVariables(string& input,
  * are usable, so we are taking full words from its output.
  */
 void App::CreateServerAuth() {
-    /* create mit cookie */
+    //   create mit cookie
     uint16_t word;
     uint8_t hi, lo;
     int i;
@@ -1281,7 +1268,7 @@ char* App::StrConcat(const char* str1, const char* str2) {
 void App::UpdatePid() {
     std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
     if (!lockfile) {
-        logStream << APPNAME << ": Could not update lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
+        logStream << "SLiM: Could not update lockfile: " << cfg->getOption("lockfile").c_str() << std::endl;
         exit(ERR_EXIT);
     }
     lockfile << getpid() << std::endl;

@@ -1,117 +1,154 @@
-list of available SLiM configuration options
-(This comprehensive list was gleaned from cfg.cpp
-Currently, a comprehensive list is not provided within the default-provided slim.conf, nor within the manpage.)
+### list of available SLiM configuration options
+###      ( This comprehensive list was gleaned from cfg.cpp )
+### A comprehensive list is not presented within the default-provided slim.conf, nor within the manpage.
+###
+### created for slim v1.4.2
 
-=== QUOTATION MARKS SHOWN HERE (BELOW)
-=== FOR EACH OPTION NAME AND EACH EXAMPLE OPTION VALUE
-=== SHOULD __NOT__ BE USED WITHIN THE slim.conf FILE
+=== SYNTAX NOTE:
+===     WITHIN THE slim.conf FILE,
+===     QUOTATION MARKS SHOULD BE ABSENT FROM ALL VALUES
+===     EXCEPT THE VALUE OF THE console_cmd OPTION
 
-Note:
-welcome_msg allows 2 variables: %host and %domain
-login_cmd allows 2 variables: %session and %theme
--=-
-sessionstart_cmd allows %user (executed right before login_cmd)
-   and %user is also allowed in sessionstop_cmd
+### Note:
+###    welcome_msg allows 2 variables: %host and %domain
+###    login_cmd allows 2 variables: %session and %theme
+###
+###    sessionstart_cmd allows %user (executed right before login_cmd)
+###       and %user is also allowed in sessionstop_cmd
 
 
-"default_path"       "/bin:/usr/bin:/usr/local/bin"
-"default_xserver"    "/usr/bin/X"
-"xserver_arguments"  ""
-"numlock"            ""
-"daemon"             "yes"
-"xauth_path"         "/usr/bin/xauth"
-"login_cmd"          "exec /bin/bash -login ~/.xinitrc %session"
-"halt_cmd"           "/sbin/shutdown -h now"
-"reboot_cmd"         "/sbin/shutdown -r now"
-"suspend_cmd"        ""
-"sessionstart_cmd"   ""
-"sessionstop_cmd"    ""
+default_path       /bin:/usr/bin:/usr/local/bin
+default_xserver    /usr/bin/X
 
-# THE FOLLOWING LONG console_cmd LINE IS LINEWRAPPED HERE
-# (in use, must be all-on-one-line)
-"console_cmd"        "/usr/bin/xterm -C -fg white -bg
-black +sb -g %dx%d+%d+%d -fn %dx%d -T ""Console login"" -e /bin/sh -c ""/bin/cat /etc/issue; exec /bin/login"""
+###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
+xserver_arguments  -nolisten tcp
 
-"screenshot_cmd"     "import -window root /slim.png"
-"welcome_msg"        "Welcome to %host"
-"session_msg"        "Session:"
-"default_user"       ""
-"focus_password"     "no"
-"auto_login"         "no"
-"current_theme"      "default"
-"lockfile"           "/var/run/slim.lock"
-"logfile"            "/var/log/slim.log"
-"authfile"           "/var/run/slim.auth"
-"shutdown_msg"       "The system is halting..."
-"reboot_msg"         "The system is rebooting..."
-"sessions"           "wmaker,blackbox,icewm,fluxbox"
+numlock            off
+daemon             yes
+xauth_path         /usr/bin/xauth
+login_cmd          exec /bin/bash -login ~/.xinitrc %session
+halt_cmd           /sbin/shutdown -h now
+reboot_cmd         /sbin/shutdown -r now
 
-#    when user supplies non-blank pathstring (via slim.conf)
-#    sessiondir lookup is performed (and "sessions" conf option is ignored)
-"sessiondir"      ""
+###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
+suspend_cmd
 
-"hidecursor"      "false"
+###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
+sessionstart_cmd
 
-#     Theme stuff
-"input_panel_x"      "50%"
-"input_panel_y"      "40%"
-"input_name_x"       "200"
-"input_name_y"       "154"
-"input_pass_x"       "-1"    // default is single inputbox
-"input_pass_y"       "-1"
-"input_font"         "Verdana:size=11"
-"input_color"        "#000000"
-"input_cursor_height"    "20"
-"input_hidecursor"       "false"
-"input_center_text"      "false"
-"input_maxlength_name"   "20"
-"input_maxlength_passwd" "20"
-"input_shadow_xoffset"   "0"
-"input_shadow_yoffset"   "0"
-"input_shadow_color"     "#FFFFFF"
+###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
+sessionstop_cmd
 
-"welcome_font"           "Verdana:size=14"
-"welcome_color"          "#FFFFFF"
-"welcome_x"              "-1"
-"welcome_y"              "-1"
-"welcome_shadow_xoffset" "0"
-"welcome_shadow_yoffset" "0"
-"welcome_shadow_color"   "#FFFFFF"
+### IN CASE THE FOLLOWING LONG console_cmd LINE APPEARS LINEWRAPPED HERE,
+### UNDERSTAND THAT WITHIN THE ACTUAL CONFIG FILE,
+### THE COMMANDSTRING MUST EXIST ALL-ON-ONE-LINE
+###    (also note: THE VALUE FOR THIS OPTION MAY BE LEFT BLANK)
+console_cmd     /usr/bin/xterm -C -fg white -bg black +sb -T "Console login" -e /bin/sh -c "/bin/cat /etc/issue; exec /bin/login"
 
-"intro_msg"      ""
-"intro_font"     "Verdana:size=14"
-"intro_color"    "#FFFFFF"
-"intro_x"        "-1"
-"intro_y"        "-1"
 
-"background_style"      "stretch"
-"background_color"      "#CCCCCC"
+### Executed when pressing F11 (requires imagemagick)
+#screenshot_cmd      import -window root /slim.png
+###   IMAGEMAGICK IS NOT PRE-INSTALLED IN ANTIX, SO ---v
+### Executed when pressing F11 (requires scrot)
+screenshot_cmd      scrot /root/slim.png
+
+
+welcome_msg        Welcome to %host
+session_msg        Session:
+
+focus_password     no
+auto_login         no
+
+###  WHEN THE auto_login OPTION IS NOT SET TO >>>yes<<<
+###  THE VALUE FOR THE default_user OPTION CAN BE LEFT BLANK
+default_user
+
+current_theme      default
+lockfile           /var/run/slim.lock
+logfile            /var/log/slim.log
+authfile           /var/run/slim.auth
+
+shutdown_msg       The system is halting...
+reboot_msg         The system is rebooting...
+
+### THE VALUE FOR sessions SHOULD BE COMMA-SEPARATED, NO SPACES
+sessions           wmaker,blackbox,icewm,fluxbox
+
+###    when user supplies non-blank pathstring (via slim.conf)
+###    sessiondir lookup is performed (and "sessions" conf option is ignored)
+###
+###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
+###     (and, in fact, IS BLANK in the as-shipped antiX configuration)
+###           /usr/share/xsessions
+sessiondir
+
+hidecursor      false
+
+### Below, you may specify a mix of XFT or FREETYPE font names
+
+###     Theme-related options
+input_panel_x      50%
+input_panel_y      40%
+input_name_x       200
+input_name_y       154
+input_pass_x       -1    // this default value yields a single inputbox
+input_pass_y       -1
+input_font         Verdana:size=11
+input_color        #000000
+input_cursor_height    20
+input_hidecursor       false
+input_center_text      false
+input_maxlength_name   20
+input_maxlength_passwd 20
+input_shadow_xoffset   0
+input_shadow_yoffset   0
+input_shadow_color     #FFFFFF
+
+welcome_font           Verdana:size=14
+welcome_color          #FFFFFF
+welcome_x              -1
+welcome_y              -1
+welcome_shadow_xoffset 0
+welcome_shadow_yoffset 0
+welcome_shadow_color   #FFFFFF
+
+###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
+###   (currently, the "intro_msg" option is unused/ignored anyhow)
+intro_msg
+
+intro_font     Verdana:size=14
+intro_color    #FFFFFF
+intro_x        -1
+intro_y        -1
+
+background_style      stretch
+background_color      #CCCCCC
  
-"username_font"         "Verdana:size=12"
-"username_color"        "#FFFFFF"
-"username_x"            "-1"
-"username_y"            "-1"
-"username_msg"          "Please enter your username"
-"username_shadow_xoffset"    "0"
-"username_shadow_yoffset"    "0"
-"username_shadow_color"      "#FFFFFF"
+username_font         Verdana:size=12
+username_color        #FFFFFF
+username_x            -1
+username_y            -1
+username_msg          Please enter your username
+username_shadow_xoffset    0
+username_shadow_yoffset    0
+username_shadow_color      #FFFFFF
  
-"password_x"      "-1"
-"password_y"      "-1"
-"password_msg"    "Please enter your password"
+password_x      -1
+password_y      -1
+password_msg    Please enter your password
  
-"msg_color"     "#FFFFFF"
-"msg_font"      "Verdana:size=16:bold"
-"msg_x"         "40"
-"msg_y"         "40"
-"msg_shadow_xoffset"    "0"
-"msg_shadow_yoffset"    "0"
-"msg_shadow_color"      "#FFFFFF"
+msg_color     #FFFFFF
+msg_font      Verdana:size=16:bold
+msg_x         40
+msg_y         40
+msg_shadow_xoffset    0
+msg_shadow_yoffset    0
+msg_shadow_color      #FFFFFF
  
-"session_color"         "#FFFFFF"
-"session_font"          "Verdana:size=16:bold"
-"session_x"             "50%"
-"session_y"             "90%"
-"session_shadow_xoffset"    "0"
-"session_shadow_yoffset"    "0"
-"session_shadow_color"      "#FFFFFF"
+session_color         #FFFFFF
+session_font          Verdana:size=16:bold
+session_x             50%
+session_y             90%
+session_shadow_xoffset    0
+session_shadow_yoffset    0
+session_shadow_color      #FFFFFF

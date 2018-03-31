@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: anticapitalista <antiX@operamail.com>
 Uploaders: skidoo <email@redact.ed>
 Build-Depends: debconf, debhelper (>= 9), dh-exec, po-debconf,
-	cmake, libpam0g-dev, sharutils, libck-connector-dev, freeglut3-dev,
+	cmake, libpam0g-dev, sharutils, libck-connector-dev,
 	libjpeg-dev, libpng-dev, libxft-dev, libxmu-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/antiX-Linux/slim-antix

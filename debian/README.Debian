@@ -11,3 +11,18 @@ Regarding this behavior, use of a terminal emulator like xterm is recommended.
 The current SLiM package now (again) defaults to, and recommends, xterm.
 
  Mike Massonnet <email@redact.ed>  Tue, 21 Jul 2009 17:07:20 +0100
+
+
+
+skidoo sez: I cannot find sense in the above "advisement".
+How/why would a TABBED terminal emulator present greater "risk" than non-tabbed?
+-=-
+As is, the SLiM 'console' command invokes a root-permissioned terminal emulator instance.
+If a sysadmin is concerned about "risk", s/he can blank/outcomment the console_cmd
+line within /etc/slim.conf (along with the other conf vars which specify the
+runactions of the halt, suspend, reboot commands)
+-=-
+At the moment, a sysadmin has no ability to disable the SLiM "exit" command
+(and the "exit" command is invoked without demanding a password)
+# added for v1.4.2
+

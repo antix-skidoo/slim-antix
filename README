@@ -9,10 +9,10 @@ PREFACE (specific to this antiX-maintained version of SLiM)
     This antiX-maintained version should be regarded as a hard fork,
     with future changes cherry-picked from various sources.
     For now, the list of sources consulted as well as both the completed
-    and prospective edits/changes are detailed in the TODO file.
+    and prospective edits/changes are detailed in the  doc/TODO  file.
 
-    To preclude the need for marking/pinning packages, the declared version
-    (within CMakeLists.txt and debian/changelog) is v1.4.1
+    To preclude the need for marking/pinning packages on antiX systems,
+    the declared version (within CMakeLists.txt and debian/changelog) is currently "v1.4.2"
 
 
 INTRODUCTION
@@ -20,38 +20,48 @@ INTRODUCTION
     It aims to be simple, fast, and independent from the various desktop environments.
 
     Features:
-    - External (customizable) themes and configuration
-    - PNG support (with alpha transparency) for panel
+    - supports customizable themes and provides a range of configuration options
+    - option to display a fixed-choice, or random theme each time
+    - panel provides PNG support (with alpha transparency)
+    - remembers last session (sessionname) used; user can press F1 to cycle thru available xsession
+    - option to specify default_user and autologin
     - PNG / JPEG support for background images
-    - XFT / freetype support
-    - Double or single (GDM-style) inputbox support
+    - supports use of freetype and XFT fonts
+    - configurable inputbox presentation: dual, or single (GDM-style)
     - CMake build procedure
 
 INSTALLATION
-    see the INSTALL file (for generic, not antiX, instructions)
+    for generic instructions (systems other than antiX),
+    refer to the  doc/INSTALL  file within this source package
+
 
 USAGE
     To launch slim, execute (run) the slim binary,
-    followed by the -d option if you want it to run as a daemon in the background (recommended)
+    followed by the -d option if you want it to run as a daemon (recommended)
+    (If not run as a daemon, the user is returned to console upon session logout.)
 
-    Enter username and password to login. The ~/.xinitrc file is executed by default,
-    so ensure your home directory contains a working  .xinitrc file
+    While the SLiM login screen is displayed:
 
-    Special username strings can be entered to initiate commands (configurable, via the config file):
-    - console: starts console-based login
-    - exit: exits SLiM
-    - halt: halts the system
-    - reboot: reboots the system
+	   Pressing "F1" toggles (cycles   choose   installed / available desktop sessions
 
-    Pressing the F11 key executes a user-specified command (see the configuration file);
-    the default command is to take a screenshot (using scrot, which is pre-installed in antiX)
+       Enter username and password to login. The ~/.xinitrc file is executed by default,
+       so ensure your home directory contains a working  .xinitrc file
+
+       Special username strings can be entered to initiate commands (configurable, via slim.conf file):
+       - console: starts console-based login
+       - exit: exits SLiM
+       - halt: halts the system
+       - reboot: reboots the system
+
+       Pressing the F11 key executes a user-specified command (see the configuration file);
+       the default command is to take a screenshot (using scrot, which is pre-installed in antiX)
 
 CONFIGURATION
     /etc/slim.conf is the SLiM configuration file.
     Options are explained via inline comments within the file itself
-    ( see also: /usr/share/doc/slim/SLIM_OPTIONS.txt )
-    For reference (or rollback), a copy of the as-shipped conf file is installed to
-    /usr/share/doc/slim/slim.conf.antix_orig
+    ( see also:  /usr/share/doc/slim/SLIM_OPTIONS.txt )
+    On antiX systems, a copy of the as-shipped conf file is also installed to
+    /usr/share/doc/slim/slim.conf.antix_orig (for reference, or rollback)
 
 THEMES
     See THEMES file (a copy is installed to /usr/share/doc/slim/THEMES)
@@ -59,4 +69,4 @@ THEMES
 COPYRIGHT
     SLiM is copyright (c) 2004-06 by Simone Rota, Johannes Winkelmann,
     Nobuhiro Iwamatsu and is available under the GNU General Public License.
-    See the doc/COPYING file for the complete license.
+    A complete copy of the license is provided in the  doc/COPYING"  file.

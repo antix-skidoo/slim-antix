@@ -1,6 +1,7 @@
 ###  FOR A COMPLETE LIST OF AVAILABLE CONFIGURATION OPTIONS,
 ###  REFER TO  /usr/share/doc/slim/OPTIONS_LIST.txt
-
+#
+###  modified for slim v1.4.2
 
 #######    BECAUSE THE antiX "slim-login" UTILITY OVERWRITES THE CONTENT
 #######    OF slim.conf WITH CONTENT OF usr/share/slim/slim.template
@@ -82,8 +83,8 @@ sessionstop_cmd 	/usr/bin/sessreg -d -l $DISPLAY %user
 ### The current chosen session name is replaced in the login_cmd
 ### (specified above), so your login command can handle different sessions.
 ### see the xinitrc.sample file shipped with slim sources
-sessions rox-fluxbox,space-fluxbox,fluxbox,rox-icewm,space-icewm,icewm,rox-jwm,space-jwm,jwm,herbstluftwm
-#sessions            xfce4,icewm-session,wmaker,blackbox
+sessions rox-fluxbox,space-fluxbox,fluxbox,fluxbox-min,rox-icewm,space-icewm,icewm,icewm-min,rox-jwm,space-jwm,jwm,herbstluftwm
+#sessions            xfce4,icewm-session,wmaker,fluxbox,openbox
 
 ### (Optionally) Specify a directory that contains the available xsessions.
 ### slim populates xsessions selectbox from .desktop files present in this directory.

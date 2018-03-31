@@ -65,33 +65,3 @@ msgstr "Sólo puede utilizarse un gestor de sesiones para gestionar un servidor 
 msgid "Multiple display managers can run simultaneously if they are configured to manage different servers; to achieve this, configure the display managers accordingly, edit each of their init scripts in /etc/init.d, and disable the check for a default display manager."
 msgstr "Varios gestores de sesiones se pueden ejecutar simultáneamente si están configurados para manejar diferentes servidores. Para conseguir esto, configure los gestores de sesiones apropiadamente, edite cada script de init en «/etc/init.d» relacionado con ellos y desactive la comprobación en busca del gestor de sesiones predeterminado."
 
-#, fuzzy
-#~ msgid "Stop the xdm daemon?"
-#~ msgstr "¿Desea parar el demonio de xdm?"
-
-#, fuzzy
-#~ msgid ""
-#~ "The X display manager (xdm) daemon is typically stopped on package "
-#~ "upgrade and removal, but it appears to be managing at least one running X "
-#~ "session."
-#~ msgstr ""
-#~ "El demonio del gestor de sesiones (xdm) generalmente se para al "
-#~ "actualizar los paquetes y al eliminarlos, pero parece que gestiona por lo "
-#~ "menos una sesión X en estos momentos. Si detiene xdm ahora, cualquier "
-#~ "sesión X que gestione será destruida. Puede dejar que xdm siga "
-#~ "ejecutándose, y la siguiente versión tendrá efecto cuando el demonio se "
-#~ "rearranque."
-
-#, fuzzy
-#~ msgid ""
-#~ "If xdm is stopped now, any X sessions it manages will be terminated. "
-#~ "Otherwise, the new version will take effect the next time the daemon is "
-#~ "restarted."
-#~ msgstr ""
-#~ "El demonio del gestor de sesiones (xdm) generalmente se para al "
-#~ "actualizar los paquetes y al eliminarlos, pero parece que gestiona por lo "
-#~ "menos una sesión X en estos momentos. Si detiene xdm ahora, cualquier "
-#~ "sesión X que gestione será destruida. Puede dejar que xdm siga "
-#~ "ejecutándose, y la siguiente versión tendrá efecto cuando el demonio se "
-#~ "rearranque."
-

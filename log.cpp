@@ -1,26 +1,23 @@
 #include "log.h"
 #include <iostream>
+#include <stdlib.h>
 
-bool
-LogUnit::openLog(const char * filename)
+/* ....ref:   http://www.cplusplus.com/reference/iostream/cerr/     */
+
+bool LogUnit::openLog(const char * filename)
 {
-	if (logFile.is_open()) {
-		/*
-		cerr << APPNAME 
-			<< ": opening a new Log file, while another is already open"
-			<< endl;
-		*/
-		logFile.close();
-	}
-	logFile.open(filename, ios_base::app);
+    if (logFile.is_open()) {
+        std::cerr << "SLiM: opening a new Log file, while another is already open" << std::endl;
+        logFile.close();
+    }
+    logFile.open(filename, ios_base::app);
 
-	return !(logFile.fail());
+    return !(logFile.fail());
 }
 
-void
-LogUnit::closeLog()
+void LogUnit::closeLog()
 {
-	if (logFile.is_open()) {
-		logFile.close();
-	}
+    if (logFile.is_open()) {
+        logFile.close();
+    }
 }

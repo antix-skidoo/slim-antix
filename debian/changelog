@@ -1,15 +1,28 @@
 slim (1.4.2) unstable; urgency=medium
 
+    * added UTF8 support for welcome_message
+        (translations followup needed)
+    * debian/rules: add hardening rules
+        (source fortification, stack protection, relro)
+    * remove unused jpeg.c and png.c, and refs within CMakeLists.txt
+        Their functionality had already been incorporated into image.cpp
+    * app.cpp:  Fix env alloc (ref http://bugs.debian.org/733916)
+    * image.cpp, image.h: outcomment unused fn Merge_non_crop()
+    * add new options to support centering of input box text and hiding of cursor
+    * fix: save root window pixmap id when setting background
+    * For further details, refer to doc/ChangeLog within the source pkg
+      (note: installation places a copy to usr/share/doc/slim/ChangeLog)
+
  -- skidoo <email@redact.ed>  Wed, 21 Feb 2018 12:34:56 +0100
 
 slim (1.4.1) unstable; urgency=medium
 
   * declaring a much higher version number, to avoid need of pinning pkg
   * this is a ROLLUP release
-   - NOTED: a suitable definitive UPSTREAM source no longer exists.
-   - Apply various bug fixes dredged from various source repositories
-   - Provides expanded documentation (installed to /usr/share/doc/slim)
-   - For further details, refer to doc/ChangeLog within the source pkg
+    - NOTED: a suitable definitive UPSTREAM source no longer exists.
+    - Apply various bug fixes dredged from various source repositories
+    - Provides expanded documentation (installed to /usr/share/doc/slim)
+    - For further details, refer to doc/ChangeLog within the source pkg
 
  -- skidoo <email@redact.ed>  Wed, 18 Jan 2018 12:34:56 +0100
 

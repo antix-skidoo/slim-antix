@@ -3,11 +3,11 @@ cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
 set(PROJECT_NAME slim)
 project(${PROJECT_NAME})
 
-#Pretty colors
+###Pretty colors
 set(CMAKE_COLOR_MAKEFILE ON)
-#Dont force verbose
+###Dont force verbose
 set(CMAKE_VERBOSE_MAKEFILE ON)
-#Include current dir
+###Include current dir
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
 INCLUDE(CheckIncludeFile)
@@ -15,10 +15,10 @@ INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckCXXCompilerFlag)
 INCLUDE(CheckTypeSize)
 
-# Version     WAS 1.3.4
+### Version     WAS 1.3.4
 set(SLIM_VERSION_MAJOR "1")
 set(SLIM_VERSION_MINOR "4")
-set(SLIM_VERSION_PATCH "1")
+set(SLIM_VERSION_PATCH "2")
 set(SLIM_VERSION "${SLIM_VERSION_MAJOR}.${SLIM_VERSION_MINOR}.${SLIM_VERSION_PATCH}")
 
 set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Directory")
@@ -41,15 +41,16 @@ set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DVERSION=\"${SLIM_VERSION}\"")
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DPKGDATADIR=\"${PKGDATADIR}\"")
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DSYSCONFDIR=\"${SYSCONFDIR}\"")
 
-# project-specific CFLAGS or CPPFLAGS not needed. Defer to use of the system-specified flags.
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -O2" )
-#set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -Wall -g -O2" )
+### project-specific CFLAGS or CPPFLAGS not needed. Defer to use of the system-specified flags.
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -O2")
+#set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -Wall -g -O2")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
 
-# source
+### source
 set(slim_srcs
 	main.cpp
 	app.cpp
+	capslock.cpp
 	cfg.cpp
 	image.cpp
 	numlock.cpp
@@ -57,8 +58,6 @@ set(slim_srcs
 	switchuser.cpp
 	util.cpp
 	log.cpp
-	png.c
-	jpeg.c
 )
 
 if(USE_PAM)
@@ -70,29 +69,26 @@ endif(USE_CONSOLEKIT)
 
 add_executable(${PROJECT_NAME} ${slim_srcs})
 
-#Set the custom CMake module directory where our include/lib finders are
+###Set the custom CMake module directory (where our include/lib finders reside)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 find_package(X11 REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
-#find_package(ZLIB REQUIRED)  # dpkg-shlibdeps sez "none of this library's symbols are used
+#find_package(ZLIB REQUIRED)   # dpkg-shlibdeps warns "none of this library's symbols are used
 
 
-### Fontconfig
-#
-###   skidoo   Legacy code?   # dpkg-shlibdeps sez "none of this library's symbols are used
-#set(FONTCONFIG_DIR ${CMAKE_MODULE_PATH})
-#find_package(FONTCONFIG REQUIRED)
-#if(FONTCONFIG_FOUND)
-#	message("\tFontConfig Found")
-#	target_link_libraries(${PROJECT_NAME} ${FONTCONFIG_LIBRARY})
-#	include_directories(${FONTCONFIG_INCLUDE_DIR})
-#endif(FONTCONFIG_FOUND)
+### Fontconfig    # dpkg-shlibdeps sez "none of this library's symbols are used
+set(FONTCONFIG_DIR ${CMAKE_MODULE_PATH})
+find_package(FONTCONFIG REQUIRED)
+if(FONTCONFIG_FOUND)
+	message("\tFontConfig Found")
+	target_link_libraries(${PROJECT_NAME} ${FONTCONFIG_LIBRARY})
+	include_directories(${FONTCONFIG_INCLUDE_DIR})
+endif(FONTCONFIG_FOUND)
 
 
-# PAM
 if(USE_PAM)
 	message("\tPAM Enabled")
 	find_package(PAM)
@@ -108,7 +104,7 @@ else(USE_PAM)
 	message("\tPAM disabled")
 endif(USE_PAM)
 
-# ConsoleKit
+
 if(USE_CONSOLEKIT)
 	find_package(CkConnector)
 	message("\tConsoleKit Enabled")
@@ -135,53 +131,59 @@ else(USE_CONSOLEKIT)
 	message("\tConsoleKit disabled")
 endif(USE_CONSOLEKIT)
 
-# system librarys
+### system libraries
 find_library(M_LIB m)
 find_library(RT_LIB rt)
-#find_library(CRYPTO_LIB crypt)  # dpkg-shlibdeps sez "none of this library's symbols are used
+find_library(CRYPTO_LIB crypt)  # dpkg-shlibdeps sez "none of this library's symbols are used
 
 add_definitions(${SLIM_DEFINITIONS})
 
-#Set up include dirs with all found packages
+###Set up include dirs with all found packages
 include_directories(
 	${X11_INCLUDE_DIR}
 	${X11_Xft_INCLUDE_PATH}
-#	${X11_Xrender_INCLUDE_PATH}    # dpkg-shlibdeps sez "none of this library's symbols are used
+	${X11_Xrender_INCLUDE_PATH}   # dpkg-shlibdeps misleadingly warns "none of this library's symbols are used
 
-	/*    Using FREETYPE_INCLUDE_DIR_freetype2 directly can cause issues
-	       with newer freetype packages, as it doesn't contain all freetype include dirs.
-	*/
-	#${FREETYPE_INCLUDE_DIR_freetype2}
-	#  ^---v
-	${FREETYPE_INCLUDE_DIRS}   #  OUTCOMMENTED, THEN REVERTED    dpkg-shlibdeps sez "none of this library's symbols are used
+###     Using FREETYPE_INCLUDE_DIR_freetype2 directly
+###       can cause issues with newer freetype packages (it does not contain all freetype include dirs)
+#	${FREETYPE_INCLUDE_DIR_freetype2}
+#	  ^---v
+	${FREETYPE_INCLUDE_DIRS}   # dpkg-shlibdeps misleadingly warns "none of this library's symbols are used
 
 	${X11_Xmu_INCLUDE_PATH}
-### ${ZLIB_INCLUDE_DIR}   # dpkg-shlibdeps sez "none of this library's symbols are used
+#	${ZLIB_INCLUDE_DIR}   # dpkg-shlibdeps warns "none of this library's symbols are used
 	${JPEG_INCLUDE_DIR}
 	${PNG_INCLUDE_DIR}
 )
 
 set(X11_Xmu_LIB Xmu)
-#Set up library with all found packages
+###Set up library with all found packages
 target_link_libraries(${PROJECT_NAME}
 	${M_LIB}
 	${RT_LIB}
-#	${CRYPTO_LIB}    # dpkg-shlibdeps sez "none of this library's symbols are used
+	${CRYPTO_LIB}    # dpkg-shlibdeps sez "none of this library's symbols are used
 	${X11_X11_LIB}
 	${X11_Xft_LIB}
-#	${X11_Xrender_LIB}      # dpkg-shlibdeps sez "none of this library's symbols are used
+	${X11_Xrender_LIB}       # dpkg-shlibdeps misleadingly warns "none of this library's symbols are used
 	${X11_Xmu_LIB}
-#	${FREETYPE_LIBRARY}     # dpkg-shlibdeps sez "none of this library's symbols are used
+	${FREETYPE_LIBRARY}      # dpkg-shlibdeps misleadingly warns "none of this library's symbols are used
 	${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
 	)
 
 ####### install
-# slim
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin )
-# man file
+
 install(FILES doc/slim.1 DESTINATION ${MANDIR}/man1/)
-# configure
+
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
-# themes directory
-subdirs(themes)
+
+###  TODO   this hard-coded dirpath may not exist on all target systems
+###
+###  TODO   check the inconsistent use of trailing slash
+###         (vs none, as seen in the CMakeLists.txt residing in subdirs)
+install(FILES README DESTINATION /usr/share/doc/slim/)
+
+add_subdirectory(themes)
+add_subdirectory(doc)
+

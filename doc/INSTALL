@@ -19,3 +19,12 @@ To build and install the program:
 
 For automatic startup:
     Edit the init scripts according to your OS/Distribution.
+
+================
+
+See Also (again, generic, not necessarily applicable to the antiX packaged version):
+
+   https://github.com/PeteGozz/slim/blob/master/INSTALL
+
+### changed for slim v1.4.2
+

@@ -1,25 +1,29 @@
+### changed for slim v1.4.2
+
 Quick THEME howto for SLiM
 
 GENERAL CONCEPT
     A SLiM theme essentially consists of:
-    - a background image (background.png or background.jpg)
-    - a panel image (panel.png or panel.jpg)
-    - a file (slim.theme) specifying placement and properties
-        of input box(es) and text messages.
+    ~~ a background image (background.png or background.jpg)
+    ~~ a panel image (panel.png or panel.jpg)
+    ~~ a file (slim.theme) specifying placement and properties
+          of input box(es) and text messages.
 
     The panel image and background image can be a PNG or JPEG file.
     The panel is blended into the background image using alpha transparency.
+    SLiM disregards any transparency of the background image
+      ~~ background_color pixels will not "bleed through" the background image.
 
 SUPPORTED FORMATS
-    - fonts:  use the xft font specs, ie: Verdana:size=16:bold
-    - colors: use html hex format, ie #0066CC
-    - positions: can be either absolute in pixels, ie 350
-      or relative to the container, ie 50% is in the middle of the screen.
+    fonts:  use the xft font specs, e.g.: Verdana:size=16:bold
+    colors: use html hex format, e.g. #0066CC
+    positions: can be either absolute in pixels, e.g. 350
+        or relative to the container, i.e. 50% is in the middle of the screen.
 
 OPTIONS
     The following is an example slim.theme file
     ----------------------------------------------------------------------
-    # Color, font, position for the messages (ie: shutting down)
+    # Color, font, position for the messages (e.g.: shutting down)
     msg_color               #FFFFFF
     msg_font                Verdana:size=16:bold
     msg_x                   50%
@@ -31,9 +35,13 @@ OPTIONS
     session_x               50%
     session_y               90%
 
-    # style of background: 'stretch', 'tile', 'center', 'color'
+    # style of background: 'stretch', 'tile', 'center', 'solidcolor'
+    ###
+    ###   IF YOU INTEND TO SPECIFY A background_color,
+    ###   THE background_style OPTION MUST BE SET TO 'solidcolor' (noquotes)
+    ###
     background_style        stretch
-    background_color		#FF0033
+    background_color        #FF0033
 
     # Horizonatal and vertical position for the panel.
     input_panel_x           50%
@@ -43,6 +51,11 @@ OPTIONS
     # IMPORTANT! set input_pass_x and input_pass_y to -1
     # to use a single input box for username/password (GDM Style).
     # Note: use only absolute values for these fields
+    ###          RESTATED, FOR CLARITY:
+    ### if the following are not specified (or are set to -1), the result is a single inputbox.
+    ###      ALSO, FOR SINGLE INPUTBOX PRESENTATION,
+    ###      input_pass_x value MUST EQUAL input_name_x value
+    ###      AND input_pass_y value MUST EQUAL input_name_y value
     input_name_x            40
     input_name_y            100
     input_pass_x            40
@@ -53,8 +66,7 @@ OPTIONS
     input_color             #000000
 
     # Welcome message position (relative to the panel)
-    # use -1 for both values or comment the options to disable
-    # the welcome message
+    # use -1 for both values or comment the options to disable the welcome message
     welcome_x              	50%
     welcome_y              	38
 
@@ -75,7 +87,7 @@ OPTIONS
     password_y                 146
 
     # The message to be displayed. Leave blank if no message
-    # is needed (ie, when already present in the panel image)
+    # is needed (i.e. when already present in the panel image)
     username_msg            Please enter your username
     password_msg            Please enter your password
     ----------------------------------------------------------------------
@@ -84,9 +96,9 @@ SHADOWS
 
     The 'msg', 'input', 'welcome', 'session' and 'username' sections
     support shadows; three values can be configured:
-    - color: the shadow color
-    - x offset: the offset in x direction, relative to the normal text
-    - y offset: the offset in y direction, relative to the normal text
+         color: the shadow color
+       xoffset: the offset in x direction, relative to the normal text
+       yoffset: the offset in y direction, relative to the normal text
 
     To add a text shadow to the welcome msg, add the following to /etc/slim.conf:
     ----------------------------------------------------------------------
@@ -120,3 +132,14 @@ SHADOWS
     ----------------------------------------------------------------------
 
 
+
+SLiM expects to find themes under the /usr/share/slim/themes/ directory.
+To activate a given theme, edit the current_theme line in /etc/slim.conf
+-=-
+You may specify a list of multiple comma-separated theme names on that line,
+and SLiM will choose one of them at random during each run.
+
+
+
+While Xorg is running, you can preview a theme with:
+    $ slim -p /usr/share/slim/themes/<name of theme>

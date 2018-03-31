@@ -12,9 +12,7 @@
 #ifndef _CONST_H_
 #define _CONST_H_
 
-
-#define APPNAME    "slim"
-
+#define APPNAME    "slim"   // no longer used
 #define DISPLAY    ":0.0"
 
 #define CONSOLE_STR     "console"
@@ -32,19 +30,17 @@
 #define OK_EXIT     0
 #define ERR_EXIT    1
 
-/* duration for showing error messages,
- * as "login command failed", in seconds 
- */
+// duration for showing error messages (e.g. "login command failed"), in seconds
 #define ERROR_DURATION  5
 
-// variables replaced in login_cmd
+// variables replaced within login_cmd
 #define SESSION_VAR     "%session"
 #define THEME_VAR       "%theme"
 
-/* variables replaced in pre-session_cmd and post-session_cmd */
+// variables replaced in pre-session_cmd and post-session_cmd
 #define USER_VAR       "%user"
 
-/* max height/width for images */
+// max height/width for images
 #define MAX_DIMENSION 10000
 
 #endif

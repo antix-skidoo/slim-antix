@@ -1,6 +1,13 @@
 ### The following variable defines the session which is started if the user
 ### does not explicitly select a session.
 ### (this is a --sample-- not "as-shipped by antiX")
+#
+### If you intend use a well-populated xinitrc file,
+### take a look at this additional sample file ---v
+###     https://github.com/PeteGozz/slim/blob/master/xinitrc.sample
+###
+### changed for slim v1.4.2
+###
 DEFAULT_SESSION=twm
 
 case $1 in
@@ -10,13 +17,21 @@ xfce4)
 icewm)
 	icewmbg &
 	icewmtray &
-	exec icewm
+	exec icewm-session
+	;;
+icewm-session)
+	icewmbg &
+	icewmtray &
+	exec icewm-session
 	;;
 wmaker)
 	exec wmaker
 	;;
-blackbox)
-	exec blackbox
+fluxbox)
+	exec fluxbox
+	;;
+openbox)
+	exec openbox
 	;;
 *)
 	exec $DEFAULT_SESSION

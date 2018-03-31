@@ -1,39 +1,47 @@
-#!/usr/bin/dh-exec
+#! /usr/bin/dh-exec --with=install
+###    https://github.com/algernon/dh-exec
+###
+###  The CMake "INSTALL(FILES...)" directive can handle renaming files.
+###  This slim.install currently employs dh-exec just as an academic exercise.
+###
+###  For use with dh-exec, this slim.install file must be marked executable.
 
-### template is used by the "slim-login" (autologin setup) utility
-debian/custom/slim.template => usr/share/slim/slim.template
+### template is used by the antiX "slim-login" (autologin setup) utility
+debian/custom/slim.template => /usr/share/slim/slim.template
 
-### place a copy into docs directory, for reference
-slim.conf => usr/share/doc/slim/slim.conf.antix_orig
-debian/slim.pam => /usr/share/doc/slim/pam.antix_orig
+debian/slim.pam => /etc/pam.d/slim
+### place an extra copy of these into docs directory, for reference
+slim.conf => /usr/share/doc/slim/slim.conf.antix_orig
+debian/slim.pam => /usr/share/doc/slim/slim.pam__antix_orig
+
+# THIS op may be redundant (I'm not convinced the cmakefile copy op is effective)
+slim.conf /etc
 
 ### target dirs are created, if absent, when debhelper parses "slim.dirs"
-debian/slim.logrotate   etc/logrotate.d/slim
-debian/slim.init        etc/init.d/slim
+#debian/slim.logrotate   etc/logrotate.d/slim
+#  late change.  THE ABOVE SEEMS WRONG
+debian/slim.logrotate => /etc/logrotate.d/slim
+
+
+#debian/slim.init        etc/init.d/slim
+# late change. THE ABOVE SEEMS WRONG
+debian/slim.init => /etc/init.d/slim
+
 debian/custom/Xsession.d/20slim_locale    etc/X11/Xsession.d
 
-debian/antiX     usr/share/slim/themes/
-
+###       these items are antiX -specific
 ### the "slim-login" script performs "slim autologin configuration"
 debian/custom/slim-login        usr/local/bin
 debian/custom/antixccslim.sh    usr/local/bin
-
 debian/custom/slim_login.desktop       usr/share/applications/antix
 debian/custom/slim_wallpaper.desktop   usr/share/applications/antix
 
-doc/pam.sample          usr/share/doc/slim
-doc/xinitrc.sample      usr/share/doc/slim
-doc/ChangeLog           usr/share/doc/slim
-doc/COPYING             usr/share/doc/slim
-doc/OPTIONS_LIST.txt    usr/share/doc/slim
-README                  usr/share/doc/slim
-doc/THEMES              usr/share/doc/slim
+###     debian packaging annoyingly converts installed docfiles to *.gz
+###     (interferes with users' ability to grep the content of doc dir)
+###   TODO ~~ CMake test the presence of, and conditionally install these?
+###
+###   TODO    check whether dh-exec similarly creates *.gz
 debian/README.Debian    usr/share/doc/slim
 
-### THE FOLLOWING LINE WAS OUTCOMMENTED IN PRIOR slim-antix VERSION
-#pam.sample etc/pam.d/slim
-
-### (pam.sample copy op is also outcommented in debian/rules file)
-###    above, we place a sample copy in docs dir
-### and debhelper copies debian/slim.pam to /etc/pam.d/slim
-doc/pam.sample          etc/pam.d/slim
+# this generates a redundant copy
+#debian/changelog => /usr/share/doc/slim/changelog.Debian

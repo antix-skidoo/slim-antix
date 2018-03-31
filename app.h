@@ -64,7 +64,7 @@ private:
     void UpdatePid();
 
     bool AuthenticateUser(bool focuspass);
- 
+
     static std::string findValidRandomTheme(const std::string& set);
     static void replaceVariables(std::string& input,
                                  const std::string& var,
@@ -85,7 +85,7 @@ private:
     bool serverStarted;
 
 #ifdef USE_PAM
-	PAM::Authenticator pam;
+    PAM::Authenticator pam;
 #endif
 #ifdef USE_CONSOLEKIT
     Ck::Session ck;
@@ -99,17 +99,17 @@ private:
     Pixmap BackgroundPixmap;
 
     void blankScreen();
-    Image* image;
+    Image* bimage;
     Atom BackgroundPixmapId;
     void setBackground(const std::string& themedir);
 
     bool firstlogin;
     bool daemonmode;
     bool force_nodaemon;
-	// For testing themes
-	char* testtheme;
+    // For testing themes
+    char* testtheme;
     bool testing;
-    
+
     std::string themeName;
     std::string mcookie;
 
@@ -118,4 +118,3 @@ private:
 
 
 #endif
-

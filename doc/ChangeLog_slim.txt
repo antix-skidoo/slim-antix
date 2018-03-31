@@ -1,8 +1,35 @@
-1.4.2 - 2018.02.21
-	*
+1.4.2 - 2018.03.22
+	* do not fail (exit) if background image is missing; instead,
+	    fallback to using solidcolor
+	* do not fail (exit) if panel image is missing; instead,
+	    fallback to using a plain, solid color box
+	* When solidcolor has been specified, and background_color contains
+	    an invalid value (or is empty), assert background_color=#ff0000
+	    to provide visual feedback regarding the misconfiguration.
+	* added UTF8 support for welcome_message
+	    (translations followup needed)
+	* debian/rules: add hardening rules
+        (source fortification, stack protection, relro)
+	* remove unused jpeg.c and png.c, and refs within CMakeLists.txt
+        Their functionality had already been incorporated into image.cpp
+    * upon failed login (incorrect username+pw), display an onscreen
+        message (configurable, via themfile) and, conditionally,
+        alert user to CapsLock=ON status
+	* fix: "-h" help commandline option showed no ouptut
+	* app.cpp:  Fix env alloc (ref http://bugs.debian.org/733916)
+	* image.cpp, image.h: outcomment unused fn Merge_non_crop()
+	* add new options to support centering of input box text and hiding of cursor
+	* rename the generic value "color" (background_style option value) to "solidcolor"
+	* fix: save root window pixmap id when setting background
+	* antiX/slim.theme: correct option name (input_fgcolor >>> input_color)
+	* fix Cfg::getIntOption (declare 0 as default value)
+	* upon failed login, provide onscreen hint if CapsLock is ON
+	* removed executable bit from shipped pam.sample file
+	* debian/control: remove stated build dependency (freeglut3-dev)
+	* (devnote: temporarily tag, during testing ### for slim v1.4.2)
 
 1.4.1 - 2018.01.18
-	* remove unnecessary declared dependency (libzip)
+	* remove unnecessary declared libz (aka zip) dependency
 	* debian/rules: add "scrot" as Recommends (for F11 screenshot) and
         "antix-goodies" (provides yad, used by "slim-login" + "antixccslim.sh")
         and "gtkdialog" (used by "antixccslim.sh").
@@ -12,8 +39,9 @@
 	* slim-login: insert test for presence of yad
 	* optimize existing antiX background.jpg themefile.
         reduce (35kb>>14kb) and decrease gamma + increase saturation
-	* provide a minimal (6kb solid black) bgimage for 'default' theme
-        and do not remove themes/default dir (keep for user reference)
+	* provide a minimal (6kb solid black) bgimage for 'default' theme;
+        ship additional themes (to demonstrate examples of both single,
+        and double, input box layouts)
 	* create a COMPREHENSIVE list of config options/descriptions
         (install creates /usr/share/doc/slim/OPTIONS_LIST.txt)
         and add "SEE ALSO: /usr/share/doc/slim directory" into the manpage
@@ -32,19 +60,18 @@
         SLiM theme (specified in /etc/slim.conf) is: current_theme  antiX"
 
 1.3.4 - 2012.06.26
-	* Replaced stderr writes function.
-	* Fix numlock control.
-	* Fix build with GLUT.
-	* Fix PAM authentication.
+	* Replaced stderr writes function
+	* Fix numlock control
+	* Fix build with GLUT
+	* Fix PAM authentication
 
 1.3.3 - 2012.02.22
-	* Change build system to CMake.
-	* Add support ConsoleKit.
-	* Fix some bugs....
+	* Change build system to CMake
+	* Add support ConsoleKit
 
 1.3.2 - 2010.07.08
-    * Add support xauth secret.
-    * Add xnest_debug mode.
+    * Add support xauth secret
+    * Add xnest_debug mode
 
 1.3.1 - 2008.09.26
     * Added focus_password config option for focusing password
@@ -58,23 +85,20 @@
 
 1.3.0 - 2006.07.14
     * Added PAM support by Martin Parm
-    * Fixed segfault on exit when testing themes. Thanks
-      to Darren Salt & Mike Massonnet
-    * Fixed vt argument detection, thanks to Henrik Brix Andersen
+    * Fixed segfault on exit when testing themes
+    * Fixed vt argument detection
     * Corrected reference to input_color in the default theme
     * Fixed default shell setting
-    * Fix segfault when calling XCloseDisplay(NULL); thanks Uli Schlachter
+    * Fix segfault when calling XCloseDisplay(NULL)
 
 1.2.6 - 2006.09.15
     * Bug #008167: Update pid when in daemon mode
-    * Fixed warnings when compiling with -Wall. Thanks to
-      KIMURA Masaru
+    * Fixed warnings when compiling with -Wall
     * Fixed major memory leaks with repeated login (bug #007535)
 
 1.2.5 - 2006.07.24
     * hiding of the cursor is now an option (disabled
-      by default) since some WMs does not re-initialize
-      the root window cursor.
+      by default) b/c some WMs do not re-initialize the root window cursor
     * The X server is restarted when the user logs out.
       This fixes potential security issues with user-launched
       apps staying attached to the root window after logout.
@@ -83,14 +107,11 @@
       in has his .Xauthority file initializated.
 
 1.2.4 - 2006.01.18
-    * Added commands for session start and stop
-      (i.e. for session registering)
+    * Added commands for session start and stop (i.e. for session registering)
     * Added automatic numlock on/off option
     * Support for numpad Enter key
-    * Restored support for daemon option in the config
-      file.
-    * Lock file now uses process id, no more false
-      locking (thanks to Tobias Roth)
+    * Restored support for daemon option in the config file.
+    * lockfile now uses process id, no more false locking
 
 1.2.3 - 2005.09.11
     * Added FreeBSD, NetBSD, OpenBSD support
@@ -123,14 +144,11 @@
     * Change default theme
 
 1.1.0 - 2004.12.09
-    * error messages for X11 apps are no longer redirected
-      to the log file
+    * error messages for X11 apps are no longer redirected to the log file
     * fixed text position for default theme
     * added configurable shutdown and reboot messages
-    * separated 'Enter username' and 'Enter password' messages
-      position.
-    * due to the previous two points, the theme format has
-      slightly changed
+    * separated 'Enter username' and 'Enter password' messages position.
+    * due to the previous two points, the theme format has slightly changed
 
 1.0.0 - 2004.12.07
     * First public SLiM release

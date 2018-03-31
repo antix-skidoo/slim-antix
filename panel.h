@@ -50,11 +50,12 @@ public:
     Panel(Display* dpy, int scr, Window root, Cfg* config,
           const std::string& themed);
     ~Panel();
-    void OpenPanel();
+    void OpenPanel(const string& themedir);
     void ClosePanel();
     void ClearPanel();
+    void WarnCapslock(int timeout);
     void Message(const std::string& text);
-    void Error(const std::string& text);
+    void Error(const std::string& text, const string& themedir);
     void EventHandler(const FieldType& curfield);
     std::string getSession();
     ActionType getAction(void) const;
@@ -72,7 +73,7 @@ private:
     void OnExpose(void);
     bool OnKeyPress(XEvent& event);
     void ShowText();
-    void SwitchSession();
+    void SwitchSession();  // noted: in v1.3.6 this fn is not private
     void ShowSession();
 
     void SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
@@ -108,7 +109,7 @@ private:
     XftColor entershadowcolor;
     ActionType action;
     FieldType field;
-    
+
     // Username/Password
     std::string NameBuffer;
     std::string PasswdBuffer;
@@ -142,7 +143,8 @@ private:
     // Pixmap data
     Pixmap PanelPixmap;
 
-    Image* image;
+    Image* pimage;
+    //Image* zpimage;    //  added late, then outcommented toward avoidng "white box"
 
     // For thesting themes
     bool testing;
@@ -154,5 +156,3 @@ private:
 };
 
 #endif
-
-

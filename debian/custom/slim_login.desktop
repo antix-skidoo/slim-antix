@@ -7,3 +7,5 @@ Terminal=false
 Type=Application
 Categories=Settings;
 NoDisplay=True
+;NOT modified for slim v1.4.2
+

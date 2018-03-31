@@ -61,33 +61,3 @@ msgstr "Sadece bir ekran yöneticisi verilen X sunucusunu yönetebilir; ancak si
 msgid "Multiple display managers can run simultaneously if they are configured to manage different servers; to achieve this, configure the display managers accordingly, edit each of their init scripts in /etc/init.d, and disable the check for a default display manager."
 msgstr "Eğer farklı sunucuları çalıştırmak için ayarlanırsa birden fazla ekran yöneticisi kullanılabilir.  Bunun için, her bir ekran yöneticisini uygun bir şekilde yapılandırın, /etc/init.d içindeki ilgili betikleri değiştirin ve öntanımlı ekran yöneticisini denetleyen işlevleri devre dışı bırakın."
 
-#, fuzzy
-#~ msgid "Stop the xdm daemon?"
-#~ msgstr "xdm servisini durdurmak istiyor musunuz?"
-
-#, fuzzy
-#~ msgid ""
-#~ "The X display manager (xdm) daemon is typically stopped on package "
-#~ "upgrade and removal, but it appears to be managing at least one running X "
-#~ "session."
-#~ msgstr ""
-#~ "X ekran yöneticisi (xdm) servisi, paket güncelleme ve kaldırma sırasında "
-#~ "genellikle durdurulur.  Fakat öyle görünüyor ki xdm, çalışan (en az) bir "
-#~ "X oturumunu yönetiyor.  Eğer xdm şimdi durdurulursa yönetilen X "
-#~ "oturumları da sonlandırılacaktır.  Böyle yapmak yerine xdm'i çalışır "
-#~ "vaziyette bırakabilirsiniz.  Yeni sürüm, xdm servisinin bir sonraki "
-#~ "çalıştırılışında etkin olacaktır."
-
-#, fuzzy
-#~ msgid ""
-#~ "If xdm is stopped now, any X sessions it manages will be terminated. "
-#~ "Otherwise, the new version will take effect the next time the daemon is "
-#~ "restarted."
-#~ msgstr ""
-#~ "X ekran yöneticisi (xdm) servisi, paket güncelleme ve kaldırma sırasında "
-#~ "genellikle durdurulur.  Fakat öyle görünüyor ki xdm, çalışan (en az) bir "
-#~ "X oturumunu yönetiyor.  Eğer xdm şimdi durdurulursa yönetilen X "
-#~ "oturumları da sonlandırılacaktır.  Böyle yapmak yerine xdm'i çalışır "
-#~ "vaziyette bırakabilirsiniz.  Yeni sürüm, xdm servisinin bir sonraki "
-#~ "çalıştırılışında etkin olacaktır."
-

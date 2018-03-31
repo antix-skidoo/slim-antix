@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+###  NOT modified for slim v1.4.2
+
 . /etc/default/locale
 for lt_var in $(env -i locale | sed -e 's/=.*$//') LANGUAGE
 do

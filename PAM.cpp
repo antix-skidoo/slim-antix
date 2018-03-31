@@ -146,14 +146,14 @@ namespace PAM {
             case PAM_USER_UNKNOWN:
                 _end();
                 throw Exception(pam_handle, "pam_acct_mgmt()", last_result);
-                
+
             case PAM_AUTH_ERR:
             case PAM_PERM_DENIED:
                 throw Auth_Exception(pam_handle, "pam_acct_mgmt()", last_result);
 
             case PAM_SUCCESS:
                 break;
-        };
+        }
         return;
     }
 
@@ -187,7 +187,7 @@ namespace PAM {
 
             case PAM_SUCCESS:
                 break;
-        };
+        }
         return;
     }
 
@@ -206,7 +206,7 @@ namespace PAM {
 
             case PAM_SUCCESS:
                 break;
-        };
+        }
         switch((last_result=pam_setcred(pam_handle, PAM_DELETE_CRED))){
             default:
             case PAM_CRED_ERR:
@@ -237,7 +237,7 @@ namespace PAM {
 
             case PAM_SUCCESS:
                 break;
-        };
+        }
         return;
     }
 
@@ -255,7 +255,7 @@ namespace PAM {
 
             case PAM_SUCCESS:
                 break;
-        };
+        }
         return;
     }
 
@@ -267,7 +267,7 @@ namespace PAM {
         return pam_getenvlist(pam_handle);
     }
 
-};
+}
 
 std::ostream& operator<<( std::ostream& os, const PAM::Exception& e){
     os << e.func_name << ": " << e.errstr;

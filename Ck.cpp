@@ -92,7 +92,8 @@ namespace Ck {
     vt = *((long *)return_value);
 
     // std::snprintf(device, 32, "/dev/tty%ld", vt);
-    std::snprintf(device, 32, "/dev/tty%ld", vt);
+    //      snprintf() is not available on some arm arches, and really is not heeded here.
+    std::sprintf(device, "/dev/tty%ld", vt);
 
     if(return_value)
       XFree(return_value);
@@ -141,7 +142,7 @@ namespace Ck {
   {
     dbus_error_free(&error);
   }
-};
+}
 
 std::ostream& operator<<( std::ostream& os, const Ck::Exception& e)
 {

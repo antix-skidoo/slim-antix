@@ -39,7 +39,7 @@ void SwitchUser::SetUserId() {
             (initgroups(Pw->pw_name, Pw->pw_gid) != 0) ||
             (setgid(Pw->pw_gid) != 0) ||
             (setuid(Pw->pw_uid) != 0) ) {
-        logStream << APPNAME << ": could not switch user id" << endl;
+        logStream << "SLiM: could not switch to the specified user id" << endl;
         exit(ERR_EXIT);
     }
 }
@@ -47,7 +47,7 @@ void SwitchUser::SetUserId() {
 void SwitchUser::Execute(const char* cmd) {
     chdir(Pw->pw_dir);
     execle(Pw->pw_shell, Pw->pw_shell, "-c", cmd, NULL, env);
-    logStream << APPNAME << ": could not execute login command" << endl;
+    logStream << "SLiM: could not execute the specified login command" << endl;
 }
 
 void SwitchUser::SetClientAuth(const char* mcookie) {

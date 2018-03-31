@@ -13,6 +13,9 @@
 #include <iostream>
 #include <unistd.h>
 #include <stdlib.h>
+// #i nclude <cstdio>  // late addition ~~  needed for logging?   NOT USEFUL
+// #i nclude <sstream>   // late addition ~~  needed for logging?
+#include "log.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -107,11 +110,13 @@ Cfg::Cfg()
     options.insert(option("password_x","-1"));
     options.insert(option("password_y","-1"));
     options.insert(option("password_msg","Please enter your password"));
+    options.insert(option("password_feedback_capslock", "Authentication failed (CapsLock is ON)"));
+    options.insert(option("password_feedback_msg", "Authentication failed"));
 
-    options.insert(option("msg_color","#FFFFFF"));
-    options.insert(option("msg_font","Verdana:size=16:bold"));
-    options.insert(option("msg_x","40"));
-    options.insert(option("msg_y","40"));
+    options.insert(option("msg_color","#FFFF00"));
+    options.insert(option("msg_font","Verdana:size=14:bold"));
+    options.insert(option("msg_x","30"));
+    options.insert(option("msg_y","30"));
     options.insert(option("msg_shadow_xoffset","0"));
     options.insert(option("msg_shadow_yoffset","0"));
     options.insert(option("msg_shadow_color","#FFFFFF"));
@@ -124,6 +129,8 @@ Cfg::Cfg()
     options.insert(option("session_shadow_xoffset","0"));
     options.insert(option("session_shadow_yoffset","0"));
     options.insert(option("session_shadow_color","#FFFFFF"));
+    options.insert(option("passwd_feedback_x", "20"));
+    options.insert(option("passwd_feedback_y", "30"));   // skidoo   these 2 are not yet documented for use within conf
 
     error = "";
 
@@ -160,6 +167,7 @@ bool Cfg::readConf(string configfile) {
         return true;
     } else {
         error = "Cannot read configuration file: " + configfile;
+        logStream << "SLiM: Cannot read configuration file '" << configfile << endl;  // skidoo
         return false;
     }
 }
@@ -234,9 +242,18 @@ int Cfg::string2int(const char* string, bool* ok) {
     return (*err == 0) ? l : 0;
 }
 
+
+
 int Cfg::getIntOption(std::string option) {
     return string2int(options[option].c_str());
 }
+/*             THIS IS A LATE CHANGE, PERHAPS UNNEDED. CONSIDER REVERTING THIS LATER
+int Cfg::getIntOption(std::string option, int defaultVal) {
+    int l = string2int(options[option].c_str());
+    return (l > 0) ? l : defaultVal;
+}
+*/
+
 
 // Get absolute position
 int Cfg::absolutepos(const string& position, int max, int width) {

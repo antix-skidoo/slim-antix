@@ -83,30 +83,3 @@ msgstr ""
 "iniţializare din /etc/init.d şi dezactivaţi testul de manager de ecran "
 "implicit."
 
-#, fuzzy
-#~ msgid "Stop the xdm daemon?"
-#~ msgstr "Doriţi să opriţi demonul xdm?"
-
-#, fuzzy
-#~ msgid ""
-#~ "The X display manager (xdm) daemon is typically stopped on package "
-#~ "upgrade and removal, but it appears to be managing at least one running X "
-#~ "session."
-#~ msgstr ""
-#~ "Demonul X de management al ecranului (xdm) este, în mod obişnuit oprit la "
-#~ "înnoirea sau ştergerea pachetului, dar se pare că acesta guvernează cel "
-#~ "puţin o sesiune X care rulează acum. Dacă xdm este oprit acum, orice "
-#~ "sesiune guvernată de el va fi terminată. Altfel, îl puteţi lăsa pe xdm să "
-#~ "ruleze şi noua versiune va avea efect la următoarea repornire a demonului."
-
-#, fuzzy
-#~ msgid ""
-#~ "If xdm is stopped now, any X sessions it manages will be terminated. "
-#~ "Otherwise, the new version will take effect the next time the daemon is "
-#~ "restarted."
-#~ msgstr ""
-#~ "Demonul X de management al ecranului (xdm) este, în mod obişnuit oprit la "
-#~ "înnoirea sau ştergerea pachetului, dar se pare că acesta guvernează cel "
-#~ "puţin o sesiune X care rulează acum. Dacă xdm este oprit acum, orice "
-#~ "sesiune guvernată de el va fi terminată. Altfel, îl puteţi lăsa pe xdm să "
-#~ "ruleze şi noua versiune va avea efect la următoarea repornire a demonului."

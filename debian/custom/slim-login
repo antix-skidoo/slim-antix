@@ -1,5 +1,7 @@
 #!/bin/bash
 # autologin setup tool for SLiM
+#
+###  modified for slim v1.4.2
 
 TEXTDOMAINDIR=/usr/share/locale
 TEXTDOMAIN=slim-login

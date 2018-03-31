@@ -72,7 +72,7 @@ namespace PAM {
     public:
         Authenticator(conversation* conv, void* data=0);
         ~Authenticator(void);
-        
+
         void start(const std::string& service);
         void end(void);
         void set_item(const ItemType item, const void* value);
@@ -93,7 +93,7 @@ namespace PAM {
         Authenticator(const PAM::Authenticator&);
         Authenticator& operator=(const PAM::Authenticator&);
     };
-};
+}
 
 std::ostream& operator<<( std::ostream& os, const PAM::Exception& e);
 #endif
