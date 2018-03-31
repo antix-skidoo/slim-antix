@@ -17,7 +17,7 @@ if [ ! -w /etc/slim.conf ]; then
     exit 1
 fi
 
-username=$(yad --entry --width 320 --title "SLiM autologin configuration" --text $"Enter username for auto-login.");
+username=$(yad --entry --width 320 --title "SLiM autologin configuration" --text $"Enter desired username for auto-login.");
 
 [[ $username != "" ]] || { yad "error" --title "!" --button=OK --text "No username provided. Will now exit"; exit 1; }
 
