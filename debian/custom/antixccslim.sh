@@ -5,7 +5,9 @@
 
 # Check xserver is running and user is root
 [[ $DISPLAY ]] || { echo "There is no xserver running. Exiting..." ; exit 1 ; }
-[ "$UID" !="0" ] || { yad --image "error" --title "!" --text "root (sudo) authorization required \! \n\nCannot continue." ; exit 1 ; }
+if [ "$UID" !="0" ]; then
+    yad --image "error" --title "!" --text "root (sudo) authorization required \! \n\nCannot continue." ; exit 1 ;
+fi
 
 [[ -e /usr/local/bin/yad ]] || { echo "yad (provided by 'antix-goodies' package) missing; cannot proceed"; exit 1; }
 [[ -e /usr/bin/gtkdialog ]] || { echo "/usr/bin/gtkdialog missing; cannot proceed"; exit 1; }
