@@ -5,7 +5,7 @@
 
 # Check xserver is running and user is root
 [[ $DISPLAY ]] || { echo "There is no xserver running. Exiting..." ; exit 1 ; }
-if [ "$UID != "0" ]; then
+if [ "$UID" != "0" ]; then
     yad --image "error" --title "!" --text "root (sudo) authorization required \! \n\nCannot continue." ; exit 1;
 fi
 
