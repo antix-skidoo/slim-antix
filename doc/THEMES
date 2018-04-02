@@ -1,5 +1,3 @@
-### changed for slim v1.4.2
-
 Quick THEME howto for SLiM
 
 GENERAL CONCEPT
@@ -14,14 +12,35 @@ GENERAL CONCEPT
     SLiM disregards any transparency of the background image
       ~~ background_color pixels will not "bleed through" the background image.
 
+    As of v1.4.2, presence of background imagefile within a theme directory is optional.
+    Similarly, presence of panel imagefile is optional. Testing has indicated that,
+    by omitting the imagefiles and/or choosing "background_style solidcolor",
+    you may reduce the runtime memory footprint of SliM. (lowest reported: 3.1MB)
+    NOTE: in the absence of a panel image, the username/login fields are rendered
+    atop a generic (opaque white) rectangular overlay.
+
+
 SUPPORTED FORMATS
     fonts:  use the xft font specs, e.g.: Verdana:size=16:bold
     colors: use html hex format, e.g. #0066CC
     positions: can be either absolute in pixels, e.g. 350
         or relative to the container, i.e. 50% is in the middle of the screen.
 
-OPTIONS
+
+TIPS
+    SLiM expects to find themes under the /usr/share/slim/themes/ directory.
+    To activate a given theme, edit the current_theme line in /etc/slim.conf
+    -=-
+    You may specify a list of multiple comma-separated theme names on that line,
+    and SLiM will choose one of them at random during each run.
+
+    While Xorg is running, you can preview a theme with:
+        $ slim -p /usr/share/slim/themes/<name of theme>
+
+
+THEME CONFIGURATION OPTIONS
     The following is an example slim.theme file
+    (for a comprehensive list of available config options, refer to /usr/share/doc/slim/OPTIONS_LIST.txt)
     ----------------------------------------------------------------------
     # Color, font, position for the messages (e.g.: shutting down)
     msg_color               #FFFFFF
@@ -61,6 +80,10 @@ OPTIONS
     input_pass_x            40
     input_pass_y            120
 
+    # Hide the input field textcursor (Valid values: true|false)
+    input_hidecursor       true
+    input_cursor_height    20
+
     # Input controls font and color
     input_font          	Verdana:size=12
     input_color             #000000
@@ -92,7 +115,8 @@ OPTIONS
     password_msg            Please enter your password
     ----------------------------------------------------------------------
 
-SHADOWS
+
+THEME CONFIGURATION OPTIONS: SHADOWS
 
     The 'msg', 'input', 'welcome', 'session' and 'username' sections
     support shadows; three values can be configured:
@@ -132,14 +156,4 @@ SHADOWS
     ----------------------------------------------------------------------
 
 
-
-SLiM expects to find themes under the /usr/share/slim/themes/ directory.
-To activate a given theme, edit the current_theme line in /etc/slim.conf
--=-
-You may specify a list of multiple comma-separated theme names on that line,
-and SLiM will choose one of them at random during each run.
-
-
-
-While Xorg is running, you can preview a theme with:
-    $ slim -p /usr/share/slim/themes/<name of theme>
+>>>END

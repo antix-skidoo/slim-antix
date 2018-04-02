@@ -1,10 +1,10 @@
 ###    modified for slim v1.4.2
 ### Messages (ie: shutdown)
-msg_color               #f9f900
+msg_color               #d90000
 msg_font                Verdana:size=16:bold:dpi=75
 msg_x                   50%
 msg_y                   40%
-msg_shadow_color        #c00000
+msg_shadow_color        #f9f900
 msg_shadow_xoffset      1
 msg_shadow_yoffset      1
 welcome_x               22

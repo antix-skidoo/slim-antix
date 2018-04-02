@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+
+
+###    hardening (source fortification, stack protection, relro)
+DEB_HOST_ARCH ?=$(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+ifeq ($(DEB_HOST_ARCH), i386))
+	CFLAGS = -fpie -fno-strict-aliasing -fstack-protector-strong
+	CXXFLAGS = -fpie -fno-strict-aliasing -fstack-protector-strong
+endif
+
+ifeq ($(DEB_HOST_ARCH), amd64))
+	CFLAGS += -fPIE -fno-strict-aliasing -fstack-protector-strong
+	CXXFLAGS += -fPIE -fno-strict-aliasing -fstack-protector-strong
+endif
+
+LDFLAGS += -pie -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,now
+
+
+
+
+CMAKE_FLAGS = -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes
+
+%:
+	dh $@ --buildsystem=cmake
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CMAKE_FLAGS)
+
+override_dh_installinit:
+	dh_installinit --noscripts
+###    TODO   The following was, already, outcommented in prior antiX source.
+###           Recheck, determine whether this operation is, in fact, desirable.
+#dh_installinit --no-restart-on-upgrade --no-start \
+#		--update-rcd-params="start 99 2 3 4 5 . stop 1 0 1 6 ."
+
+override_dh_installpam:
+	dh_installpam --name=slim
+
+override_dh_install:
+	dh_install --list-missing
+
+	### THE FOLLOWING install INSTRUCTION WAS OUTCOMMENTED IN PRIOR slim-antix source.
+	### Currently (see: debian/slim.install), a pam.sample copy is placed in docs dir.
+	#install -D -m 0644  pam.sample \
+		#$(CURDIR)/debian/slim/etc/pam.d/slim
+
+	###  only 4 files (45kb). Leave 'em, for user reference.
+	#rm -rf \
+	#debian/slim/usr/share/slim/themes/default
+
+override_dh_usrlocal:

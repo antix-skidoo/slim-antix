@@ -57,6 +57,7 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config, const string& them
     XftColorAllocName(Dpy, visual, colormap, cfg->getOption("intro_color").c_str(), &introcolor);
     XftColorAllocName(Dpy, visual, colormap, cfg->getOption("session_color").c_str(), &sessioncolor);
     XftColorAllocName(Dpy, visual, colormap, cfg->getOption("session_shadow_color").c_str(), &sessionshadowcolor);
+    XftColorAllocName(Dpy, visual, colormap, cfg->getOption("background_color").c_str(), &backgroundcolor);
 
     // Load properties from config / theme
     input_name_x = cfg->getIntOption("input_name_x");
@@ -66,7 +67,7 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config, const string& them
     inputShadowXOffset = cfg->getIntOption("input_shadow_xoffset");
     inputShadowYOffset = cfg->getIntOption("input_shadow_yoffset");
 
-    if (input_pass_x < 0 || input_pass_y < 0){ // single inputbox mode
+    if (input_pass_x < 0 || input_pass_y < 0){  // single inputbox mode
         input_pass_x = input_name_x;
         input_pass_y = input_name_y;
     }
@@ -74,7 +75,7 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config, const string& them
     // Load  background image and panel image
     Image* bg = new Image();
     string bgstyle = cfg->getOption("background_style");
-    if (bgstyle != "solidcolor") {
+    if (bgstyle != "solidcolor") {                        //    && != "color"
         string bgimgsrc = themedir + "/background.png";
         bool bgsrcloaded = bg->Read(bgimgsrc.c_str());
         if (!bgsrcloaded) {
@@ -89,27 +90,24 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config, const string& them
             }
         }
     }
+
+    string hexval = cfg->getOption("background_color");
+    hexval = hexval.substr(1,6);
+    if (hexval == ""){       //  skidoo intended to assert and provide visual feedback regarding error condition
+        hexval = "ff0000";   //  but the value will NEVER be empty... and a forced color would probably be an annoyance
+    }
+
     if (bgstyle == "stretch" || bgstyle == "stretched") {    // skidoo  late change (undocumented)
         bg->Resize(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
-    } else if (bgstyle == "tile" || bgstyle == "tiled") {    // skidoo  late change (undocumented)
+    } else if (bgstyle == "tile" || bgstyle == "tiled") {
         bg->Tile(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
-    } else if (bgstyle == "center" || bgstyle == "centered") {    // skidoo  late change (undocumented)
-        string hexvalue = cfg->getOption("background_color");
-        hexvalue = hexvalue.substr(1,6);
+    } else if (bgstyle == "center" || bgstyle == "centered") {
+        bg->Center(  XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
+                     XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)), hexval.c_str() );
+    } else {          // solidcolor or error
         bg->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
-                   XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
-                   hexvalue.c_str());
-    } else {  // solidcolor or error
-        string hexvalue = cfg->getOption("background_color");
-        hexvalue = hexvalue.substr(1,6);
-        //  skidoo   assert and provide visual feedback regarding error condition
-        if (hexvalue == ""){
-            hexvalue = "ff0000";
-        }
-
-        bg->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
-                   XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
-                   hexvalue.c_str());
+                   XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)), hexval.c_str());
+        //   ==================================== TEST:    DO NOTHING IN THIS CASE
     }
 
     string panelpng = themedir + "/panel.png";
@@ -121,8 +119,7 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config, const string& them
         if (!pimloaded) {
             std::cout << "SLiM: could not load panel image for theme '"
                  << basename((char*)themedir.c_str()) << "'" << std::endl;
-            //  skidoo    MUST we exit here?  Instead, let's just conditionally call Merge()
-            //exit(ERR_EXIT);
+            //exit(ERR_EXIT);    // conditionally call Merge() instead
         }
     }
 
@@ -154,6 +151,7 @@ Panel::~Panel() {
 	XftColorFree(Dpy, visual, colormap, &introcolor);
 	XftColorFree(Dpy, visual, colormap, &sessioncolor);
 	XftColorFree(Dpy, visual, colormap, &sessionshadowcolor);
+	XftColorFree(Dpy, visual, colormap, &backgroundcolor);
 
 	XFreeGC(Dpy, TextGC);
 	XftFontClose(Dpy, font);
@@ -174,7 +172,7 @@ void Panel::OpenPanel(const string& themedir) {
         zpimloaded = zpimage->Read(zsrcimg.c_str());
     }
 
-    std::cout << zsrcimg << " ~~~~~  " << themedir << std::endl;
+    //std::cout << zsrcimg << " ~~~~~  " << themedir << std::endl;
 
     if (!zpimloaded) {
         Win = XCreateSimpleWindow(Dpy, Root, X, Y, 480, 260,
@@ -306,7 +304,7 @@ void Panel::Cursor(int visible) {
 
     const char* text = NULL;
     int xx = 0, yy = 0, y2 = 0, cheight = 0;
-    const char* txth = "Wj"; // used to get cursor height
+    const char* txth = "Wj";  // used to calc cursor height
 
     switch(field) {
         case Get_Passwd:
@@ -334,11 +332,8 @@ void Panel::Cursor(int visible) {
     }
 
     if(visible == SHOW) {
-        XSetForeground(Dpy, TextGC,
-                       GetColor(cfg->getOption("input_color").c_str()));
-        XDrawLine(Dpy, Win, TextGC,
-                  xx+1, yy-cheight,
-                  xx+1, y2);
+        XSetForeground(Dpy, TextGC, GetColor(cfg->getOption("input_color").c_str()));
+        XDrawLine(Dpy, Win, TextGC, xx+1, yy-cheight, xx+1, y2);
     } else {
         XClearArea(Dpy, Win, xx+1, yy-cheight, 1, y2-(yy-cheight)+1, false);
     }

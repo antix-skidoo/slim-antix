@@ -239,8 +239,8 @@ Image::getPixel(double x, double y, unsigned char *pixel, unsigned char *alpha) 
 
 /* Merge the image with a background, taking care of the
  * image Alpha transparency. (background alpha is ignored).
- * The images is merged on position (x, y) on the
- * background, the background must contain the image.
+ * The images are merged at position (x, y) on the background.
+ * "The background must contain the image" (sic).
  */
 void Image::Merge(Image* background, const int x, const int y) {
 

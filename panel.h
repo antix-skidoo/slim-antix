@@ -107,6 +107,7 @@ private:
     XftFont* enterfont;
     XftColor entercolor;
     XftColor entershadowcolor;
+    XftColor backgroundcolor;
     ActionType action;
     FieldType field;
 

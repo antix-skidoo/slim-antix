@@ -1,6 +1,6 @@
 # Messages 
 msg_color               #FFFFFF
-msg_font                Verdana:size=16:bold
+msg_font                Verdana:size=12:bold
 msg_shadow_color   #696969
 msg_shadow_xoffset 1
 msg_shadow_yoffset 1

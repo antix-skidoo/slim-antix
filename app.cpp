@@ -305,14 +305,19 @@ void App::Run() {
     // for tests we use a standard window
     if (testing) {
         Window RealRoot = RootWindow(Dpy, Scr);
-        Root = XCreateSimpleWindow(Dpy, RealRoot, 0, 0, 1280, 1024, 0, 0, 0);
+        //Root = XCreateSimpleWindow(Dpy, RealRoot, 0, 0, 1280, 1024, 0, 0, 0);
+        Root = XCreateSimpleWindow( Dpy, RealRoot, 0, 0,
+                    XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
+                    XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
+                    0,  GetColor("backgroundcolor"),  GetColor("backgroundcolor") );
+                    //  TODO   grab actual display dimensions
         XMapWindow(Dpy, Root);
         XFlush(Dpy);
     } else {
         blankScreen();
     }
 
-    HideCursor();
+    HideMouseCursor();
 
     // Create panel
     LoginPanel = new Panel(Dpy, Scr, Root, cfg, themedir);
@@ -403,7 +408,7 @@ void App::Run() {
                 break;
             default:
                 break;
-	}
+        }
     }
 }
 
@@ -497,21 +502,18 @@ int App::GetServerPID() {
     return ServerPID;
 }
 
-// Hide the cursor
-void App::HideCursor() {
-    if (cfg->getOption("hidecursor") == "true") {
-        XColor            black;
-        char            cursordata[1];
-        Pixmap            cursorpixmap;
-        Cursor            cursor;
-        cursordata[0]=0;
-        cursorpixmap=XCreateBitmapFromData(Dpy,Root,cursordata,1,1);
-        black.red=0;
-        black.green=0;
-        black.blue=0;
-        cursor=XCreatePixmapCursor(Dpy,cursorpixmap,cursorpixmap,&black,&black,0,0);
-        XDefineCursor(Dpy,Root,cursor);
-    }
+void App::HideMouseCursor() {
+    XColor            black;
+    char            cursordata[1];
+    Pixmap            cursorpixmap;
+    Cursor            cursor;
+    cursordata[0]=0;
+    cursorpixmap=XCreateBitmapFromData(Dpy,Root,cursordata,1,1);
+    black.red=0;
+    black.green=0;
+    black.blue=0;
+    cursor=XCreatePixmapCursor(Dpy,cursorpixmap,cursorpixmap,&black,&black,0,0);
+    XDefineCursor(Dpy,Root,cursor);
 }
 
 void App::Login() {
@@ -716,7 +718,7 @@ void App::Login() {
     if(killpg(pid, SIGTERM))
     killpg(pid, SIGKILL);
 
-    HideCursor();
+    HideMouseCursor();
 
 #ifndef XNEST_DEBUG
     // Re-activate log file
@@ -1102,32 +1104,60 @@ void App::setBackground(const string& themedir) {
         filename = themedir + "/background.jpg";
         bimgloaded = bimage->Read(filename.c_str());
     }
-    if (bimgloaded) {
-        string bgstyle = cfg->getOption("background_style");
+
+    string bgstyle = cfg->getOption("background_style");
+    string hexivalue = cfg->getOption("background_color");
+    hexivalue = hexivalue.substr(1,6);
+
+    unsigned long bgpxcol = strtoull(hexivalue.c_str(), NULL, 16);
+    Visual* visual = DefaultVisual(Dpy, Scr);
+    Colormap colormap = DefaultColormap(Dpy, Scr);
+    XftColorAllocName(Dpy, visual, colormap, cfg->getOption("background_color").c_str(), &backgroundcolor);
+
+
+    if (!bimgloaded || bgstyle == "color" || bgstyle == "solidcolor") {
+        Window RealRoot = RootWindow(Dpy, Scr);
+        Root = XCreateSimpleWindow( Dpy, RealRoot, 0, 0,
+                    XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
+                    XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
+                    0,  GetColor("backgroundcolor"),  GetColor("backgroundcolor") );
+    } else {
         if (bgstyle == "stretch" || bgstyle == "stretched") {   // skidoo   late change   (undocumented)
             bimage->Resize(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
-        } else if (bgstyle == "tile" || bgstyle == "tiled") {   //  skidoo late change   (undocumented)
+        } else if (bgstyle == "tile" || bgstyle == "tiled") {
             bimage->Tile(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
-        } else if (bgstyle == "center" || bgstyle == "centered") {   // skidoo  late change   (undocumented)
-            string hexvalue = cfg->getOption("background_color");
-            hexvalue = hexvalue.substr(1,6);
+        } else if (bgstyle == "center" || bgstyle == "centered") {
             bimage->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
-                        hexvalue.c_str());
-        } else {  // solidcolor or error
-            string hexvalue = cfg->getOption("background_color");
-            hexvalue = hexvalue.substr(1,6);
+                        hexivalue.c_str());
+        } else {  //  solidcolor or badvalue
             bimage->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
-                        hexvalue.c_str());
+                      hexivalue.c_str());
         }
         Pixmap p = bimage->createPixmap(Dpy, Scr, Root);
         XSetWindowBackgroundPixmap(Dpy, Root, p);
-        XChangeProperty(Dpy, Root, BackgroundPixmapId, XA_PIXMAP, 32,
-                   PropModeReplace, (unsigned char *)&p, 1);
+        XChangeProperty(Dpy, Root, BackgroundPixmapId, XA_PIXMAP, 32, PropModeReplace, (unsigned char *)&p, 1);
     }
-    XClearWindow(Dpy, Root);
 
+    XClearWindow(Dpy, Root);
     XFlush(Dpy);
+    //if (bimgloaded) {
     delete bimage;
+    //}
+}
+
+unsigned long App::GetColor(const char* colorname) {   // redundant. Should be public and called by Panel fns
+    XColor color;
+    XWindowAttributes attributes;
+
+    XGetWindowAttributes(Dpy, Root, &attributes);
+    color.pixel = 0;
+
+    if(!XParseColor(Dpy, attributes.colormap, colorname, &color))
+        logStream << "SLiM: can't parse color " << colorname << endl;
+    else if(!XAllocColor(Dpy, attributes.colormap, &color))
+        logStream << "SLiM: can't allocate color " << colorname << endl;
+
+    return color.pixel;
 }
 
 // Check if there is a lockfile and a corresponding process

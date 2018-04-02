@@ -1,4 +1,16 @@
 1.4.2 - 2018.03.22
+	* Added the following statement into THEMES file:
+	    As of v1.4.2, presence of background imagefile within a theme directory is optional.
+	    Similarly, presence of panel imagefile is optional. Testing has indicated that,
+	    by omitting the imagefiles and/or choosing "background_style solidcolor",
+	    you may reduce the runtime memory footprint of SliM. (lowest reported: 3.1MB)
+	    NOTE: in the absence of a panel image, the username/login fields are rendered
+	    atop a generic (opaque white) rectangular overlay.
+	* Removed confusingly redundant "hidecursor" option and renamed
+	  the underlying fn App:HideMouseCursor() which is now performed
+	  unconditionally ~~ mouse cursor is always hidden during login.
+	  The separate textcursor hiding behavior is implicitly false;
+	  can be overridden via theme declaration "input_hidecursor true"
 	* do not fail (exit) if background image is missing; instead,
 	    fallback to using solidcolor
 	* do not fail (exit) if panel image is missing; instead,

@@ -74,15 +74,14 @@ reboot_msg         The system is rebooting...
 ### THE VALUE FOR sessions SHOULD BE COMMA-SEPARATED, NO SPACES
 sessions           wmaker,blackbox,icewm,fluxbox
 
-###    when user supplies non-blank pathstring (via slim.conf)
-###    sessiondir lookup is performed (and "sessions" conf option is ignored)
+###    When user supplies non-blank pathstring (via slim.conf),
+###    sessiondir lookup is performed (and "sessions" conf option is ignored).
 ###
 ###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
 ###     (and, in fact, IS BLANK in the as-shipped antiX configuration)
 ###           /usr/share/xsessions
 sessiondir
 
-hidecursor      false
 
 ### Below, you may specify a mix of XFT or FREETYPE font names
 
@@ -95,8 +94,10 @@ input_pass_x       -1    // this default value yields a single inputbox
 input_pass_y       -1
 input_font         Verdana:size=11
 input_color        #000000
+
+###Hide the input field textcursor (Valid values: true|false)
+input_hidecursor       true
 input_cursor_height    20
-input_hidecursor       false
 input_center_text      false
 input_maxlength_name   20
 input_maxlength_passwd 20
@@ -112,7 +113,7 @@ welcome_shadow_xoffset 0
 welcome_shadow_yoffset 0
 welcome_shadow_color   #FFFFFF
 
-###  THE VALUE FOR THIS OPTION MAY BE LEFT BLANK
+###  THE VALUE FOR intro_msg OPTION MAY BE LEFT BLANK
 ###   (currently, the "intro_msg" option is unused/ignored anyhow)
 intro_msg
 

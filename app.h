@@ -58,9 +58,11 @@ private:
     void ReadConfig();
     void OpenLog();
     void CloseLog();
-    void HideCursor();
+    void HideMouseCursor();
     void CreateServerAuth();
     char* StrConcat(const char* str1, const char* str2);
+    unsigned long GetColor(const char* colorname);
+    XftColor backgroundcolor;
     void UpdatePid();
 
     bool AuthenticateUser(bool focuspass);

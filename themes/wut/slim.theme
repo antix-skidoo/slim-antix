@@ -1,6 +1,6 @@
 # Messages (ie: shutdown)
 msg_color               #09963f
-msg_font                Verdana:size=16:bold
+msg_font                Verdana:size=12
 msg_shadow_xoffset 1
 msg_shadow_yoffset 1
 msg_shadow_color  	#ffff00
@@ -27,7 +27,7 @@ input_bgcolor           #0c5a60
 
 
 # Welcome message
-welcome_font          	Verdana:size=20:bold:outline
+welcome_font          	Verdana:size=14:bold:outline
 welcome_color          	#eb8378
 welcome_x              	80
 welcome_y              	20

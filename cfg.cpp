@@ -61,7 +61,6 @@ Cfg::Cfg()
     //    when user supplies non-blank pathstring (via slim.conf)
     //    sessiondir lookup is performed (and "sessions" conf option is ignored)
     options.insert(option("sessiondir",""));
-    options.insert(option("hidecursor","false"));
 
     // Theme stuff
     options.insert(option("input_panel_x","50%"));
@@ -72,7 +71,7 @@ Cfg::Cfg()
     options.insert(option("input_pass_y","-1"));
     options.insert(option("input_font","Verdana:size=11"));
     options.insert(option("input_color","#000000"));
-    options.insert(option("input_cursor_height","20"));
+    options.insert(option("input_cursor_height","32"));
     options.insert(option("input_hidecursor","false"));
     options.insert(option("input_center_text","false"));
     options.insert(option("input_maxlength_name","20"));
