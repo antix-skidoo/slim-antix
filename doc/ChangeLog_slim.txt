@@ -3,7 +3,7 @@
 	    As of v1.4.2, presence of background imagefile within a theme directory is optional.
 	    Similarly, presence of panel imagefile is optional. Testing has indicated that,
 	    by omitting the imagefiles and/or choosing "background_style solidcolor",
-	    you may reduce the runtime memory footprint of SliM. (lowest reported: 3.1MB)
+	    you may reduce the runtime memory footprint of SliM.
 	    NOTE: in the absence of a panel image, the username/login fields are rendered
 	    atop a generic (opaque white) rectangular overlay.
 	* Removed confusingly redundant "hidecursor" option and renamed
