@@ -1,3 +1,17 @@
+slim (1.4.4) unstable; urgency=medium
+
+    * slim-login (autologin config gui utility) replace 
+      bash+yad script with an enhanced python+gtk script
+    * refer to doc/Changelog_slim.txt for additional details
+
+ -- skidoo <email@redact.ed>  Sun, 29 Apr 2018 12:34:56 +0100
+
+slim (1.4.3) unstable; urgency=medium
+
+    * interim version for internal testing
+
+ -- skidoo <email@redact.ed>  Mon, 18 Mar 2018 12:34:56 +0100
+
 slim (1.4.2) unstable; urgency=medium
 
     * added UTF8 support for welcome_message

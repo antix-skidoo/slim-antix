@@ -86,9 +86,9 @@ class mainWindow(Gtk.Window):
             if re.search(r'10[0-9][0-9]', line):
                 pieces = line.split(':')
                 if self.uname == str(pieces[0]) and not self.uname.lower() in \
-                             ("console","halt","shutdown","reboot","exit"):
+                             ("console","suspend","halt","shutdown","reboot","exit"):
                     self.unamestillvalid = 1
-                if not str(pieces[0]).lower() in ("console","halt","shutdown","reboot","exit"):
+                if not str(pieces[0]).lower() in ("console","suspend","halt","shutdown","reboot","exit"):
                     self.store.append([loop, pieces[0]])
                 loop+=1
         ### At startup, the UI should accurately represent the current state per slim.conf
@@ -123,7 +123,7 @@ class mainWindow(Gtk.Window):
         tree_iter = self.pickname_cbx.get_active_iter()
         model = self.pickname_cbx.get_model()
         row_id, rowname = model[tree_iter][:2]
-        if rowname.lower() in ("console","halt","shutdown","reboot","exit"):
+        if rowname.lower() in ("console","suspend","halt","shutdown","reboot","exit"):
             ErrorDlg(self, _("Error: could not set ") + rowname \
                  + _(" as default user.\n SLiM responds to this 'special username' as a command"))
             return

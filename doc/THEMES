@@ -28,7 +28,7 @@ SUPPORTED FORMATS
 
 
 TIPS
-    SLiM expects to find themes under the /usr/share/slim/themes/ directory.
+    SLiM expects to find themes under the /usr/share/slim/themes/  directory.
     To activate a given theme, edit the current_theme line in /etc/slim.conf
     -=-
     You may specify a list of multiple comma-separated theme names on that line,
@@ -38,23 +38,43 @@ TIPS
         $ slim -p /usr/share/slim/themes/<name of theme>
 
 
+SLiM recognizes 80 or so configurable options; about 50 of these options are theme-related.
+SLiM doesn’t require theme authors to explicitly declare a value for each of these options. 
+For unspecified options, it falls back to using a default value.
+-=-
+The “msg_x” and “msg_y” options (currently unseen/unused in the antiX theme)
+govern the placement of session labelnames displayed in response to F1 keypress.
+As of SLiM v1.4.4, toward accommodating 72dpi (75dpi?) displays,
+SLiM’s implicit values for these are message_x::50% and message_y::70%
+-=-
+As a tip / suggestion: for any option values which are expressed as a percentage,
+choosing a value lower than (72/96=75) 75 percent should accommodate 72dpi displays.
+-=-
+Nowadays, the default (implicit, unless overridden) xserver dpi default is probably 96.
+Additionally (or alternatively) for a machine which permanently uses a lower dpi display,
+can avoid offscreen msg placement by editing /etc/slim.conf
+and appending  -dpi 75  to the “xserver_arguments” line.
+
+
+
 THEME CONFIGURATION OPTIONS
     The following is an example slim.theme file
     (for a comprehensive list of available config options, refer to /usr/share/doc/slim/OPTIONS_LIST.txt)
     ----------------------------------------------------------------------
-    # Color, font, position for the messages (e.g.: shutting down)
+    ### Color, font, position for the messages (e.g.: shutting down)
+    ### (used to display error or other informative messages)
     msg_color               #FFFFFF
     msg_font                Verdana:size=16:bold
     msg_x                   50%
     msg_y                   30
 
-    # Color, font, position for the session list
+    ### Color, font, position for the session list
     session_color           #FFFFFF
     session_font            Verdana:size=16:bold
     session_x               50%
-    session_y               90%
+    session_y               70%
 
-    # style of background: 'stretch', 'tile', 'center', 'solidcolor'
+    ### style of background: 'stretch', 'tile', 'center', 'solidcolor'
     ###
     ###   IF YOU INTEND TO SPECIFY A background_color,
     ###   THE background_style OPTION MUST BE SET TO 'solidcolor' (noquotes)
@@ -62,16 +82,17 @@ THEME CONFIGURATION OPTIONS
     background_style        stretch
     background_color        #FF0033
 
-    # Horizonatal and vertical position for the panel.
+    ### Horizonatal and vertical position for the panel
     input_panel_x           50%
     input_panel_y           40%
 
-    # input controls horizontal and vertical positions.
-    # IMPORTANT! set input_pass_x and input_pass_y to -1
-    # to use a single input box for username/password (GDM Style).
-    # Note: use only absolute values for these fields
+    ### input controls: horizontal and vertical positions.
+    ### IMPORTANT! set input_pass_x and input_pass_y to -1
+    ### to use a single input box for username/password (GDM Style).
+    ### Note: use only absolute values (NOT percentages) for these fields
+    ###
     ###          RESTATED, FOR CLARITY:
-    ### if the following are not specified (or are set to -1), the result is a single inputbox.
+    ### If the following are not specified (or are set to -1), the result is a single inputbox.
     ###      ALSO, FOR SINGLE INPUTBOX PRESENTATION,
     ###      input_pass_x value MUST EQUAL input_name_x value
     ###      AND input_pass_y value MUST EQUAL input_name_y value
@@ -80,37 +101,40 @@ THEME CONFIGURATION OPTIONS
     input_pass_x            40
     input_pass_y            120
 
-    # Hide the input field textcursor (Valid values: true|false)
+    ### Hide the input field textcursor (Valid values: true|false)
     input_hidecursor       true
     input_cursor_height    20
 
-    # Input controls font and color
-    input_font          	Verdana:size=12
+    ### Input controls font and color
+    ### (used for textlabels displayed alongside the entry fields)
+    input_font              Verdana:size=12
     input_color             #000000
 
-    # Welcome message position (relative to the panel)
-    # use -1 for both values or comment the options to disable the welcome message
-    welcome_x              	50%
-    welcome_y              	38
+    ### Welcome message position (relative to the panel)
+    ### use -1 for both values or comment the options to disable the welcome message
+    welcome_x               50%
+    welcome_y               38
 
-    # Font and color for the welcome message
-    welcome_font          	Verdana:size=16:bold:slant=italic
-    welcome_color          	#d7dde8
+    ### Font and color for the welcome message
+    ### (Often configured so that %hostname is included in the msgtext)
+    welcome_font            Verdana:size=16:bold:slant=italic
+    welcome_color           #d7dde8
 
-    # 'Enter username' font and foreground/background color
-    username_font          	Verdana:size=12
-    username_color          	#d7dde8
+    ### 'Enter username' font and foreground/background color
+    ### (used for user-typed input strings)
+    username_font           Verdana:size=12
+    username_color          #d7dde8
 
-    # 'Enter username' and 'Enter password' position (relative to the panel)
-    #  use -1 for both values to disable the message
-    # note that in case of single inputbox the password values are ignored.
-    username_x                 50%
-    username_y                 146
-    password_x                 50%
-    password_y                 146
+    ### 'Enter username' and 'Enter password' position (relative to the panel)
+    ###  use -1 for both values to disable the message
+    ### note that in case of single inputbox the password values are ignored.
+    username_x              50%
+    username_y              146
+    password_x              50%
+    password_y              146
 
-    # The message to be displayed. Leave blank if no message
-    # is needed (i.e. when already present in the panel image)
+    ### The message to be displayed. Leave blank if no message
+    ### is needed (i.e. when already present in the panel image)
     username_msg            Please enter your username
     password_msg            Please enter your password
     ----------------------------------------------------------------------
@@ -118,7 +142,7 @@ THEME CONFIGURATION OPTIONS
 
 THEME CONFIGURATION OPTIONS: SHADOWS
 
-    The 'msg', 'input', 'welcome', 'session' and 'username' sections
+    The msg_*, input_*, welcome_*, session_* and username_* options
     support shadows; three values can be configured:
          color: the shadow color
        xoffset: the offset in x direction, relative to the normal text
@@ -135,24 +159,24 @@ THEME CONFIGURATION OPTIONS: SHADOWS
     for the other theme elements are configured similarly:
     ----------------------------------------------------------------------
     # for username and password labels
-    username_shadow_xoffset 	2
-    username_shadow_yoffset 	-2
-    username_shadow_color   	#ff0000
+    username_shadow_xoffset    2
+    username_shadow_yoffset    -2
+    username_shadow_color      #ff0000
 
     # for the input fields
-    input_shadow_xoffset 	1
-    input_shadow_yoffset 	1
-    input_shadow_color   	#0000ff
+    input_shadow_xoffset     1
+    input_shadow_yoffset     1
+    input_shadow_color       #0000ff
 
     # for the messages:
-    msg_shadow_xoffset 		1
-    msg_shadow_yoffset 		1
-    msg_shadow_color   		#ff00ff
+    msg_shadow_xoffset       1
+    msg_shadow_yoffset       1
+    msg_shadow_color         #ff00ff
 
     # For the session:
-    session_shadow_xoffset 		1
-    session_shadow_yoffset 		1
-    session_shadow_color   		#ff00ff
+    session_shadow_xoffset   1
+    session_shadow_yoffset   1
+    session_shadow_color     #ff00ff
     ----------------------------------------------------------------------
 
 

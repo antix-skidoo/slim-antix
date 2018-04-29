@@ -326,7 +326,7 @@ void Panel::Cursor(int visible) {
     y2 = yy - extents.y + extents.height;
     XftTextExtentsUtf8(Dpy, font, (XftChar8*)text, strlen(text), &extents);
     if(cfg->getOption("input_center_text") == "true") {
-        xx += extents.width / 2;
+        xx += extents.width / (double) 2;       // spec double is a late change
     } else {
         xx += extents.width;
     }
@@ -538,7 +538,7 @@ bool Panel::OnKeyPress(XEvent& event) {
         int maxLength = extents.width;
         int centeringOffset = 0;
    	if(cfg->getOption("input_center_text") == "true"){
-		centeringOffset = maxLength/2;
+		centeringOffset = maxLength / (double) 2;   // spec double is a late change
 	}
         XClearArea(Dpy, Win, xx-3-centeringOffset, yy-maxHeight-3, maxLength+6, maxHeight+6, false);
     }
@@ -549,7 +549,7 @@ bool Panel::OnKeyPress(XEvent& event) {
 	if(cfg->getOption("input_center_text") == "true"){
 		XftTextExtentsUtf8(Dpy, font, reinterpret_cast<const XftChar8*>(text.c_str()), text.length(), &extents);
         int maxLength = extents.width;
- 		centeringOffset = maxLength/2;
+ 		centeringOffset = maxLength / (double) 2;      // spec double is a late change
 	}
 	SlimDrawString8 (draw, &inputcolor, font, xx-centeringOffset, yy,
                          text,
@@ -601,8 +601,8 @@ void Panel::ShowText(){
         cfgX = cfg->getOption("password_x");
         cfgY = cfg->getOption("password_y");
         int shadowXOffset = cfg->getIntOption("username_shadow_xoffset");
-        int shadowYOffset = cfg->getIntOption("username_shadow_yoffset");
-        password_x = Cfg::absolutepos(cfgX, pimage->Width(), extents.width);
+        int shadowYOffset = cfg->getIntOption("username_shadow_yoffset");       // minus to end of line is a late change
+        password_x = Cfg::absolutepos(cfgX, pimage->Width(), extents.width) - extents.width / (double) 2;
         password_y = Cfg::absolutepos(cfgY, pimage->Height(), extents.height);
         if (password_x >= 0 && password_y >= 0){
             SlimDrawString8 (draw, &entercolor, enterfont, password_x, password_y,
@@ -615,8 +615,8 @@ void Panel::ShowText(){
         cfgX = cfg->getOption("username_x");
         cfgY = cfg->getOption("username_y");
         int shadowXOffset = cfg->getIntOption("username_shadow_xoffset");
-        int shadowYOffset = cfg->getIntOption("username_shadow_yoffset");
-        username_x = Cfg::absolutepos(cfgX, pimage->Width(), extents.width);
+        int shadowYOffset = cfg->getIntOption("username_shadow_yoffset");      // minus to end of line is a late change
+        username_x = Cfg::absolutepos(cfgX, pimage->Width(), extents.width) - extents.width / (double) 2;
         username_y = Cfg::absolutepos(cfgY, pimage->Height(), extents.height);
         if (username_x >= 0 && username_y >= 0){
             SlimDrawString8 (draw, &entercolor, enterfont, username_x, username_y,

@@ -10,8 +10,15 @@ package "cli-installer-antix" contains a script which will overwrite slim.conf  
 
 
 FOR FOLLOWUP:
-Currently, the config option "intro_msg" is unused/ignored (and such is noted in the OPTIONS_LIST.txt doc).
+Currently, the config "intro_*" options are unused/ignored (and such is noted in the OPTIONS_LIST.txt doc).
+These are NOT currently mentioned in the manpage.
 In future versions... put it to use, or delete to it (and "intro_message" refs, within the cpp code)
+cfg.cpp:91:    options.insert(option("intro_msg",""));
+cfg.cpp:92:    options.insert(option("intro_font","Verdana:size=14"));
+cfg.cpp:93:    options.insert(option("intro_color","#FFFFFF"));
+cfg.cpp:94:    options.insert(option("intro_x","-1"));
+cfg.cpp:95:    options.insert(option("intro_y","-1"));
+
 
 (RE)CONSIDER
 	 libc-6    allows 32char username, but the current (inherited cfg.h) states      #define INPUT_MAXLENGTH_NAME 30
@@ -22,12 +29,6 @@ In future versions... put it to use, or delete to it (and "intro_message" refs, 
 FOR FOLLOWUP:
 	Toward accommodating HiDPI displays, specify larger font sizes within the shipped theme(s)
 
-
-NOTED:
-/usr/local/bin/UM-set overwrites any (EVERY) line within /etc/slim.conf  which contains  "default_user"   or  "auto_login"
-(these are absent from slim.template, and lines containing these are appended to template and written to /etc/slim.conf
-when user runs the "slim-login" utility) ("Configure autologin" in controlCentre)
-Due to appending, no functional conflict... but this action may confuse a sysadmin who had manually edited slim.conf
 
 
 =======================
@@ -112,6 +113,18 @@ https://github.com/eseverson/slim/commit/3ad4dc09988dbdd89c6bf70b6a83c4fd029db20
 MERGED:
 cfg.cpp   " permit setting a default xsession from .xinitrc "
 https://github.com/iwamatsu/slim/pull/1
+
+MERGED: (old code)(cringe)   panel.cpp
+https://github.com/sodaplayer/slim/commit/8d33338c105f01119c35b43a153b5571c6ba3186
+"Center the user/password messages. Attempt to fix cursor"
+
+MERGED:   app.cpp, log.h
+https://github.com/ravomavain/slim/commit/20874802a9c8cd767d480e520f5e33410c6e9a55
+Close log before exec to avoid leaking a fd
+-=-
+https://github.com/ravomavain/slim/commit/441f34d7df9bf29232845f643ddd6a3e10e88bf2
+Also log to stderr to avoid losing messages
+
 
 sez "don't actually need GLUT lib"
 https://github.com/PeteGozz/slim/commit/e425de4633d50e0d5816bd0b00ee8b0f11351662
@@ -357,10 +370,21 @@ https://github.com/GalliumOS/slim/commit/f8738a61362dbc39e413bae3a494c497f72755a
 
 
 NOTED
+https://github.com/frinnst/SLiM/commit/72d7389c8b6b8fd7be696fc64daff76e3f0617a2
+"initial xinerama backport"
+-=-
+https://github.com/frinnst/SLiM/commit/14ab25fcdadfc322f8cb1e7ffd89c3237c6d17d4
+"added missing xinerama bits"
+
+
+
+NOTED
 https://aur.archlinux.org/packages/slim-unicode/      {-------- trailing slash required
 https://aur.archlinux.org/cgit/aur.git/tree/slim-utf8.patch?h=slim-unicode
 https://aur.archlinux.org/cgit/aur.git/tree/slim-unicode.patch?h=slim-unicode
-
+-=-
+https://github.com/frinnst/SLiM/commit/77adb844275aa9e30253a6330543a603206520d3
+"added utf8 patch from unknown author"
 
 
 NEW FILE NOT ADDED ".gitignore ( ignore built files)"

@@ -12,7 +12,7 @@ PREFACE (specific to this antiX-maintained version of SLiM)
     and prospective edits/changes are detailed in the  doc/TODO  file.
 
     To preclude the need for marking/pinning packages on antiX systems,
-    the declared version (within CMakeLists.txt and debian/changelog) is currently "v1.4.2"
+    the declared version (within CMakeLists.txt and debian/changelog) is currently "v1.4.4"
 
 
 INTRODUCTION

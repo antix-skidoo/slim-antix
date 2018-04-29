@@ -72,8 +72,16 @@ reboot the machine
 suspend
 power-suspend the machine
 .PP
+slim-antiX is compiled to include PAM (Pluggable Authentication module) support, and
+will perform a PAM authentication check when a console | exit | halt | reboot command
+is attempted via special username entry. SLiM does not initiate PAM authentication check
+when the suspend action is invoked via special username.
+.PP
 See the configuration file for customizing the above commands.
-Note: The 'halt' and 'reboot' commands demand the root password
+Note: Even if compiled without PAM surrpot, the 'halt' and 'reboot' commands demand the root password
+.PP
+Note regarding "exit": Bear in mind that a system's runlevel configuration may
+enforce immediate restart of SLiM.
 .PP
 Available Shortcuts:
 .TP
@@ -85,6 +93,10 @@ executes a custom command (by default, takes a screenshot)
 F1
 choose session type (see also: slim.conf.antix_orig and xinitrc.sample,
 installed to /usr/share/doc/slim directory)
+.PP
+If you have trouble starting your desktop environment:
+Understand that your ~/.xinitrc file is executed by default; ensure a working .xinitrc file exists in your home directory. An example ~/.xinitrc
+file is included with the SLiM the source code, and antiX SLiM package installation places a copy at /usr/share/doc/slim/xinitrc.sample
 .SH AUTHORS
 Simone Rota <sip@varlock.com>
 .PP

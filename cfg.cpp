@@ -57,7 +57,7 @@ Cfg::Cfg()
     options.insert(option("authfile","/var/run/slim.auth"));
     options.insert(option("shutdown_msg","The system is halting..."));
     options.insert(option("reboot_msg","The system is rebooting..."));
-    options.insert(option("sessions","wmaker,blackbox,icewm"));
+    options.insert(option("sessions","fluxbox,openbox,icewm,startxfce4"));
     //    when user supplies non-blank pathstring (via slim.conf)
     //    sessiondir lookup is performed (and "sessions" conf option is ignored)
     options.insert(option("sessiondir",""));
@@ -124,7 +124,7 @@ Cfg::Cfg()
     options.insert(option("session_color","#FFFFFF"));
     options.insert(option("session_font","Verdana:size=16:bold"));
     options.insert(option("session_x","50%"));
-    options.insert(option("session_y","90%"));
+    options.insert(option("session_y","70%"));
     options.insert(option("session_shadow_xoffset","0"));
     options.insert(option("session_shadow_yoffset","0"));
     options.insert(option("session_shadow_color","#FFFFFF"));

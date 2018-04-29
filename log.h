@@ -13,7 +13,7 @@
 #include <fstream>
 //#i nclude <iomanip>   /*   skidoo  late late TENTATIVE addition   */
 #include <ostream>      /*   skidoo  late late addition   */
-#include <iostream>     /*   skidoo  late addition   */
+#include <iostream>     /*   skidoo  1.4.2 addition   */
 
 //       ostream
 //   https://www.ntu.edu.sg/home/ehchua/programming/cpp/cp10_IO.html

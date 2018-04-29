@@ -1,3 +1,14 @@
+1.4.4 - 2018.04.29
+	* slim-login (autologin config gui utility) replace 
+	    bash+yad script with an enhanced python+gtk script and
+	    remove no longer needed antiX-specific slim.template file
+	* cfg.cpp (and docs) session_y: change implicit default 
+	    from 90% to 70% to accommodate low-res, low dpi displays
+	  doc/OPTIONS_LIST.txt and doc/THEMES: expand/clarify various details
+
+1.4.3 - 2018.03.18
+	* interim version for internal testing
+
 1.4.2 - 2018.03.22
 	* Added the following statement into THEMES file:
 	    As of v1.4.2, presence of background imagefile within a theme directory is optional.

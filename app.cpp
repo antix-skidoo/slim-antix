@@ -662,6 +662,7 @@ void App::Login() {
             replaceVariables(sessStart, USER_VAR, pw->pw_name);
             system(sessStart.c_str());
         }
+        CloseLog();
         Su.Login(loginCommand.c_str(), mcookie.c_str());
         _exit(OK_EXIT);
     }
@@ -980,7 +981,7 @@ int App::StartServer() {
         signal(SIGUSR1, SIG_IGN);
         setpgid(0,getpid());
 
-
+        CloseLog();     // late change, toward avoid leaking fd
         execvp(server[0], server);
         logStream << "SLiM: X server could not be started" << endl;
         exit(ERR_EXIT);
