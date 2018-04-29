@@ -1,0 +1,27 @@
+#  CHANGELOG    Apr28, 2018
+#
+# improve parsing of slim.conf; globally replace matched lines
+#
+# preclude (edge case) assignment of "special usernames" as the default user
+#
+# remove "Apply" button and DECOUPLE the 2 managed configuration options.
+# Perform changes immediately, in response to signals.
+# ### When toggling autologin on/off, don't disturb the default_user line.
+# ### (SLiM ignores default_user line when the auto_login line is missing or its value is 'no')
+#
+# suppress display of script name in window titlebar (move "frame" labeltext to titletext)
+#
+# widen window size_request toward better accommodating labeltext translation strings
+# 
+# eliminate "success dialog" in response to switch on/off changes (change is visually self-evident)
+#
+# titlestring of errorDialog is now translatable
+#
+# assign generic "." infoDialog title (to suppress gtk displaying "Unnamed")
+#
+# at startup, the UI should (and now does) indicate the current state
+# (Is autologin currently enabled? Which user is/was assigned as default_user?)
+#
+# ComboBox.new_with_model_and_entry:    set_editable(False)
+# without this, user can override our lookuplist (and can type e.g. 'root' in entrybox)
+

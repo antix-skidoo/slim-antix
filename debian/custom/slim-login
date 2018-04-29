@@ -1,55 +1,159 @@
-#!/bin/bash
-# autologin setup tool for SLiM
-#
-###  modified for slim v1.4.2
+#!/usr/bin/env python
 
-TEXTDOMAINDIR=/usr/share/locale
-TEXTDOMAIN=slim-login
+### Name: slim-login
+### Version: 2.0
+### Depends: python, Gtk, xset
+### Author: Dave (david@daveserver.info)
+### Purpose: Configure SLiM autologin
+### License: GPLv2
 
-[[ $DISPLAY ]] || { echo "There is no xserver running. Exiting..." ; exit 1 ; }
-if [ "$UID" !="0" ]; then
-    yad --image "error" --title "!" --button=OK --text "root (sudo) authorization required \! \n\nCannot continue." ; exit 1 ;
-fi
-[[ -e /usr/local/bin/yad ]] || { echo "yad (provided by 'antix-goodies' package) missing; cannot proceed"; exit 1; }
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Gdk, GLib
+import os
+import re
+import gettext
+import sys
 
-if [ ! -w /etc/slim.conf ]; then
-    yad "error" --title "!" --button=OK --text "/etc/slim.conf is missing or not writable\!\n\nunable to proceed"
-    exit 1
-fi
+print("hello")
 
-username=$(yad --entry --width 320 --title "SLiM autologin configuration" --text $"Enter desired username for auto-login.");
+gettext.install("slim-login", "/usr/share/locale")
 
-[[ $username != "" ]] || { yad "error" --title "!" --button=OK --text "No username provided. Will now exit"; exit 1; }
+class ErrorDlg:
+    def __init__(self, parent, error):
+        dlg = Gtk.MessageDialog(parent, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error")
+        dlg.format_secondary_text(error)
+        dlg.run()
+        dlg.destroy()
 
-### guard against typos (and do not presume a "demo" user account still exists)
-### The home directory check avoids the need to regex match/check for "valid" username string.
-if [[ "$username" -eq "root" ]]; then
-    echo "selected autologin as root ~~ not recommended, but... oh well";
-elif [ ! -e /home/$username ]; then
-    yad "error" --title "!" --button=OK --text "a home directory for the specified \
-      user, $username, does not exist\!\n\nunable to proceed"
-    exit 1;
-fi
+class SuccessDlg:
+    def __init__(self, parent, success):
+         dlg = Gtk.MessageDialog(parent, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Success")
+         dlg.format_secondary_text(success)
+         dlg.run()
+         dlg.destroy()
 
-# not ideal (only one prior copy preserved)
-cp -p --force /etc/slim.conf /usr/share/slim/slim.conf.backup
+class Var:
+    def __init__(self):
+        self.autostatus=0
+        self.uname = ''
 
-difference=$(diff /etc/slim.conf /usr/share/slim/slim.conf.backup &2>/dev/null)
+    def read_slimconf(self):
+        try:
+            for line in open("/etc/slim.confduh", "r").xreadlines():
+        except:
+            ErrorDlg(None, _("Could not read /etc/slim.confduh"))
+            Gtk.main_quit()
+        else:
+                #####   consider: line may exist but have leading whitespace
+                #####   Also, avoid potentially matching inline commentary, e.g.
+                #####           ### Instead of outcommenting, if you simply omit the auto_login line
+                #####           ### SLiM will assign an implicit auto_login value (which is "no")
+                if line.strip().startswith('auto_login') and line.strip().split()[1].lower() == 'yes':
+                    self.autostatus=1
+                elif line.strip().startswith('default_user') and not line.strip().split()[1].beginswith('#'):
+                    self.uname = line.strip().split()[1]
+                    ### shed any end-of-line inline comments (which SLiM parser allows/ignores)
+                    self.uname = self.uname.split('#', 1)
 
-if [ "$difference" = "" ]; then
-    ### ===== .template is presumed original and immutable =====
-    ###  NOT IDEAL (overwrites any other options which sysadmin has customized,
-    ###     unless sysadmin knows/remembers to ALSO customize the .template file_
-    cp -p --force /usr/share/slim/slim.template /etc/slim.conf
-    echo "auto_login          yes" >> /etc/slim.conf
-    echo "default_user        $username" >> /etc/slim.conf
-    echo $"Default slim.conf replaced."
-    yad --title "success" --button=OK --text "successfully updated autologin details"
-    exit 0;
-else
-    echo $"Error in making backup!"
-    yad "error" --title "!" --button=OK --text "Error: failed to create /etc/slim.conf backup copy"
-    exit 1
-fi
+class mainWindow(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self)
+        self.set_size_request(320,0)
+        self.set_border_width(10)
+        mainframe = Gtk.Frame(label=_("SLiM Autologin"))
+        self.add(mainframe)
+        self.grid = Gtk.Grid(column_spacing=5,row_spacing=15)
+        mainframe.add(self.grid)
+        self.sw_label = Gtk.Label()
+        self.sw_label.set_text(_("  Enable SLiM Autologin  "))
+        self.grid.attach(self.sw_label, 1, 1, 1, 1)
+        self.switch = Gtk.Switch()
+        self.grid.attach(self.switch, 2, 1, 1, 1)
+        self.usrname_label = Gtk.Label()
+        self.usrname_label.set_text(_("  AutoLogin User  "))
+        self.grid.attach(self.usrname_label, 1, 2, 1, 1)
+        self.store = Gtk.ListStore(int,str)
 
-exit 0
+        loop = 0
+        for line in open('/etc/passwd', "r").xreadlines():
+            if re.search(r'10[0-9][0-9]', line):
+                pieces = line.split(':')
+                self.store.append([loop, pieces[0]])
+                loop+=1
+        self.uname_cbx =  Gtk.ComboBox.new_with_model_and_entry(self.store)
+        self.uname_cbx.set_entry_text_column(1)
+        self.uname_cbx.set_active(0)
+        self.grid.attach(self.uname_cbx, 2, 2, 1, 1)
+
+        ### At startup, the UI should accurately represent the current state per slim.conf
+        ### When a default_user conf line (outcommented or not) is specified, and the
+        ### specified user account still exists, pre-select that specified username.
+        if Var.uname:
+            for itzarow in self.store:
+            	if Var.uname == itzarow.get_value(row_iter, 0):
+                    self.uname_cbx.set_active_iter(row_iter)
+
+        if Var.autostatus == 0:
+            self.switch.set_active(False)
+            self.uname_cbx.set_sensitive(False)
+        else:
+            self.switch.set_active(True)
+            self.uname_cbx.set_sensitive(True)
+
+        buttonbox = Gtk.HButtonBox()
+        buttonbox.set_border_width(10)
+        self.grid.attach(buttonbox, 2, 3, 1,1)
+        self.aplybtn = Gtk.Button(stock=Gtk.STOCK_APPLY)
+        self.aplybtn.connect("clicked", self.applycb)
+        buttonbox.pack_start(self.aplybtn, True, True, 0)
+        close = Gtk.Button(stock=Gtk.STOCK_CLOSE)
+        close.connect("clicked", lambda w: Gtk.main_quit())
+        buttonbox.add(close)
+        self.switch.connect("notify::active", self.toggle_autologin)
+
+    def toggle_autologin(self, widget, object):
+        if self.switch.get_active() == True:
+            retvalue = os.system("sed -i -e '/^\s*[#]*auto_login.*/auto_login  no/' /etc/slim.confduh")
+            if retvalue != '0':
+                ErrorDlg(self, _("Error: could not turn off AutoLogin\n Please edit /etc/slim.confduh manually"))
+            else:
+                ###    skip SuccessDlg b/c the displayed switch/slider is self-evident
+                Var.autostatus = 0
+                ###  don't disturb the default_user line in this case
+                ### (SLiM ignores it when the auto_login line is missing or its value is 'no')
+                self.uname_cbx.set_sensitive(False)
+        else:
+            retvalue = os.system("sed -i '/^\s*([#])*auto_login.*/auto_login  yes/' /etc/slim.confduh")
+            if retvalue != '0':
+                ErrorDlg(self, _("Error: could not enable AutoLogin\n Please edit /etc/slim.confduh manually"))
+            else:
+                Var.autostatus = 1
+                self.writeuser()
+                self.uname_cbx.set_sensitive(True)
+
+    def writeuser(self):
+        tree_iter = self.uname_cbx.get_active_iter()
+        model = self.uname_cbx.get_model()
+        row_id, rowname = model[tree_iter][:2]
+        if not os.path.isdir("/home/"+rowname):
+            ErrorDlg(self, _("Could not enable AutoLogin.\n /home/"+rowname+"/ directory does not exist.\n"))
+            return
+        ###                                            v------      \(#.*$\)?         requires     sed -i -e 's/#.*$//' -e '/^$/d'  myfile
+        retvalue = os.system("sed -i -e '/^\s*[#]*default_user.*/default_user"+rowname+"/' /etc/slim.confduh")    ### <<<<<<  NEED TO SPECIFY g TO REPL ALL INSTANCES?
+        if retvalue != '0':
+            ErrorDlg(self, _("Error: could not enable AutoLogin for: "+rowname+"\n Please edit /etc/slim.confduh manually"))
+        else
+            SuccessDlg(self, _("AutoLogin set for: "+rowname+"\n"))
+
+    def applycb(self,widget):        self.writeuser()
+
+if os.getuid() != 0:
+    ErrorDlg(self, _("You MUST be sudo/root to use this application"))
+    Gtk.main_quit()
+
+Var.read_slimconf()
+win = mainWindow()
+win.connect("delete-event", Gtk.main_quit)
+win.show_all()
+Gtk.main()
