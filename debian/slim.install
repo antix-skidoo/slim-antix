@@ -6,9 +6,6 @@
 ###
 ###  For use with dh-exec, this slim.install file must be marked executable.
 
-### template is used by the antiX "slim-login" (autologin setup) utility
-debian/custom/slim.template => /usr/share/slim/slim.template
-
 debian/slim.pam => /etc/pam.d/slim
 ### place an extra copy of these into docs directory, for reference
 slim.conf => /usr/share/doc/slim/slim.conf.antix_orig
