@@ -327,12 +327,22 @@ void App::Run() {
 
     if (firstlogin && cfg->getOption("default_user") != "") {
         LoginPanel->SetName(cfg->getOption("default_user") );
-    #ifdef USE_PAM
-	    pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
-	#endif
         firstlogin = false;
+#ifdef USE_PAM
+	    pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
+#endif
         if (autologin) {
-            Login();
+#ifdef USE_PAM
+			try {
+				pam.check_acct();
+#endif
+				Login();
+#ifdef USE_PAM
+			}
+			catch(PAM::Auth_Exception& e){
+				// The default user is invalid
+			}
+ #endif
         }
     }
 

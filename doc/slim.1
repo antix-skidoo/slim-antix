@@ -1,7 +1,6 @@
-" howdy
-.TH slim 1 "January 06, 2018" "" ""
+.TH slim 1 "April 30, 2019" "" ""
 .SH NAME
-\fBslim \fP- Simple LogIn Manager
+\fBslim \fP- Simple LogIn Manager (version 1.4.5)
 \fB
 .SH SYNOPSIS
 .nf
@@ -20,8 +19,9 @@ run as a daemon
 .TP
 .B
 \fB-p\fP /path/to/theme
-display a preview of the theme. An already running X11 session
-is required for theme preview.
+display a preview of the theme.
+.br
+An already running X11 session is required for theme preview.
 .TP
 .B
 \fB-h\fP
@@ -72,13 +72,15 @@ reboot the machine
 suspend
 power-suspend the machine
 .PP
+note: As of v1.4.5, SLiM does \fBnot\fP support (does not permit) root account login to desktop session.
+.PP
 slim-antiX is compiled to include PAM (Pluggable Authentication module) support, and
 will perform a PAM authentication check when a console | exit | halt | reboot command
 is attempted via special username entry. SLiM does not initiate PAM authentication check
 when the suspend action is invoked via special username.
 .PP
 See the configuration file for customizing the above commands.
-Note: Even if compiled without PAM surrpot, the 'halt' and 'reboot' commands demand the root password
+Note: Even if compiled without PAM support, the 'halt' and 'reboot' commands demand the root password
 .PP
 Note regarding "exit": Bear in mind that a system's runlevel configuration may
 enforce immediate restart of SLiM.
@@ -87,18 +89,30 @@ Available Shortcuts:
 .TP
 .B
 F11
-executes a custom command (by default, takes a screenshot)
+executes a custom command (by default, takes a screenshot) (configurable via slim.conf)
 .TP
 .B
 F1
 choose session type (see also: slim.conf.antix_orig and xinitrc.sample,
 installed to /usr/share/doc/slim directory)
 .PP
-If you have trouble starting your desktop environment:
-Understand that your ~/.xinitrc file is executed by default; ensure a working .xinitrc file exists in your home directory. An example ~/.xinitrc
-file is included with the SLiM the source code, and antiX SLiM package installation places a copy at /usr/share/doc/slim/xinitrc.sample
+.SH ADDIITONAL USAGE NOTES
+antiX ships a default /etc/slim.conf which directs SLiM to invoke the following at session startup:
+.br
+\fBsetsid /usr/local/bin/desktop-session %session\fP
+.PP
+You may, optionally, change the login_cmd within slim.conf to have SLiM instead read ~/.xinitrc
+(Commented lines containing commandstring examples are provided within slim.conf)
+If, after doing so, you have trouble starting your desktop environment:
+.\"
+.\"      Understand that your ~/.xinitrc file is executed by default;
+.\"
+ensure that a working .xinitrc file exists in your home directory. An example ~/.xinitrc
+file is included with the SLiM the source code; antiX SLiM package installation also places a copy
+at /usr/share/doc/slim/xinitrc.sample (actually, v.1.4.5 installs 2 samples in the doc directory)
 .SH AUTHORS
 Simone Rota <sip@varlock.com>
-.PP
+.br
 Johannes Winkelmann <jw@tks6.net>
+.br
 Nobuhiro Iwamatsu <iwamatsu@nigauri.org>

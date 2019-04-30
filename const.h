@@ -16,6 +16,7 @@
 #define DISPLAY    ":0.0"
 
 #define CONSOLE_STR     "console"
+#define IMA_B_ROOOT_STR "root"
 #define HALT_STR        "halt"
 #define REBOOT_STR      "reboot"
 #define EXIT_STR        "exit"

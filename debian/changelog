@@ -1,3 +1,16 @@
+slim (1.4.5) unstable; urgency=medium
+
+    * merge bugfix to handle expired accounts
+      https://github.com/iwamatsu/slim/files/2975002/expired-acct-login-1.3.6.patch.txt
+    * manpage cleanup
+    * note (here in changelog) the extraneous c-h-ar-a-c-te-r-s string
+      displayed after entering username+pw is "proof of concept" demonstrating
+      that SLiM can now handle UTF8 characters. I've not recieved testing
+      feedback from any multilingual betatesters.
+    * removed 2 extra sample themes from the package
+
+ -- skidoo <email@redact.ed>  Mon, 30 Apr 2019 10:10:10 +0800
+
 slim (1.4.4) unstable; urgency=medium
 
     * slim-login (autologin config gui utility) replace 

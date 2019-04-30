@@ -29,6 +29,10 @@ cfg.cpp:95:    options.insert(option("intro_y","-1"));
 FOR FOLLOWUP:
 	Toward accommodating HiDPI displays, specify larger font sizes within the shipped theme(s)
 
+(RE)CONSIDER:
+	permit setting a default xsession from .xinitrc 
+	https://github.com/wrigleyster/slim/commit/f891210a25e6d8d262266309614668d636e6e6bd
+
 
 
 =======================

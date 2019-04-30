@@ -121,12 +121,10 @@ namespace PAM {
             default:
             case PAM_ABORT:
             case PAM_AUTHINFO_UNAVAIL:
-                _end();
-                throw Exception(pam_handle, "pam_authenticate()", last_result);
-
             case PAM_USER_UNKNOWN:
             case PAM_MAXTRIES:
             case PAM_CRED_INSUFFICIENT:
+            case PAM_ACCT_EXPIRED:
             case PAM_AUTH_ERR:
                 throw Auth_Exception(pam_handle, "pam_authentication()", last_result);
 
@@ -144,9 +142,6 @@ namespace PAM {
             //case PAM_NEW_AUTHTOKEN_REQD:
             case PAM_ACCT_EXPIRED:
             case PAM_USER_UNKNOWN:
-                _end();
-                throw Exception(pam_handle, "pam_acct_mgmt()", last_result);
-
             case PAM_AUTH_ERR:
             case PAM_PERM_DENIED:
                 throw Auth_Exception(pam_handle, "pam_acct_mgmt()", last_result);
@@ -157,6 +152,21 @@ namespace PAM {
         return;
     }
 
+	void Authenticator::check_acct(void){
+		switch((last_result=pam_acct_mgmt(pam_handle, PAM_SILENT))){
+			case PAM_ACCT_EXPIRED:
+			case PAM_USER_UNKNOWN:
+				throw Auth_Exception(pam_handle, "pam_acct_mgmt()", last_result);
+ 
+			default:
+				//case PAM_NEW_AUTHTOKEN_REQD:
+				case PAM_AUTH_ERR:
+				case PAM_PERM_DENIED:
+				case PAM_SUCCESS:
+				break;
+			};
+	}
+
     void Authenticator::open_session(void){
         switch((last_result=pam_setcred(pam_handle, PAM_ESTABLISH_CRED))){
             default:
@@ -166,6 +176,7 @@ namespace PAM {
                 throw Exception(pam_handle, "pam_setcred()", last_result);
 
             case PAM_CRED_EXPIRED:
+            case PAM_ACCT_EXPIRED:
             case PAM_USER_UNKNOWN:
                 throw Cred_Exception(pam_handle, "pam_setcred()", last_result);
 

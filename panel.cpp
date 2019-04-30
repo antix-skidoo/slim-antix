@@ -435,6 +435,8 @@ bool Panel::OnKeyPress(XEvent& event) {
                     action = Console;
                 } else if (NameBuffer==HALT_STR){
                     action = Halt;
+                } else if (NameBuffer==IMA_B_ROOOT_STR){
+                    action = Exit;  /* Halt; */    // Hmmm... Panel::Reset()
                 } else if (NameBuffer==REBOOT_STR){
                     action = Reboot;
                 } else if (NameBuffer==SUSPEND_STR){
