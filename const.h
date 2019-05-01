@@ -32,7 +32,7 @@
 #define ERR_EXIT    1
 
 // duration for showing error messages (e.g. "login command failed"), in seconds
-#define ERROR_DURATION  5
+#define ERROR_DURATION  4
 
 // variables replaced within login_cmd
 #define SESSION_VAR     "%session"

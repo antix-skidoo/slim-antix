@@ -276,7 +276,7 @@ void Panel::Message(const string& text) {
 void Panel::Error(const string& text, const string& themedir) {
     ClosePanel();
     Message(text);
-    sleep(ERROR_DURATION);   // 5, per const.h
+    sleep(ERROR_DURATION);   // 3, per const.h
     OpenPanel(themedir);
     ClearPanel();
 }
@@ -414,6 +414,7 @@ bool Panel::OnKeyPress(XEvent& event) {
     int yy = 0;
     string text;
     string formerString = "";
+    string ssmessage;
 
     XLookupString(&event.xkey, &ascii, 1, &keysym, &compstatus);
     switch(keysym){
@@ -422,7 +423,9 @@ bool Panel::OnKeyPress(XEvent& event) {
             return true;
 
         case XK_F11:
-            system(cfg->getOption("screenshot_cmd").c_str());
+            system(cfg->getOption("screenshot_cmd").c_str());  // howdy    not sanitized
+            ssmessage = cfg->getOption("screenshot_feedback_msg");
+            Message(ssmessage);  // remains onscreen indefinitely ~~ consider using Panel::Error(string,path) instead
             return true;
 
         case XK_Return:

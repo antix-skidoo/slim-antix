@@ -57,6 +57,7 @@ console_cmd     /usr/bin/xterm -C -fg white -bg black +sb -T "Console login" -e
 ### Executed when pressing F11 (requires scrot)
 screenshot_cmd      scrot /root/slim.png
 
+password_feedback_msg     screenshot image saved to /tmp/slimshot.png
 
 welcome_msg        Welcome to %host
 session_msg        Session:

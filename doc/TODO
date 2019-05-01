@@ -9,6 +9,10 @@ package "cli-installer-antix" contains a script which will overwrite slim.conf  
 	/usr/local/bin/cli-installer
 
 
+consider:    debian/control
+Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 1.2.9) | debconf-2.0, dbus, x11-xserver-utils, consolekit | elogind | logind | libpam-elogind
+
+
 FOR FOLLOWUP:
 Currently, the config "intro_*" options are unused/ignored (and such is noted in the OPTIONS_LIST.txt doc).
 These are NOT currently mentioned in the manpage.
@@ -20,6 +24,11 @@ cfg.cpp:94:    options.insert(option("intro_x","-1"));
 cfg.cpp:95:    options.insert(option("intro_y","-1"));
 
 
+
+    // Write message
+    LoginPanel->Message((char*)cfg->getOption("reboot_msg").c_str());
+    sleep(3);
+    
 (RE)CONSIDER
 	 libc-6    allows 32char username, but the current (inherited cfg.h) states      #define INPUT_MAXLENGTH_NAME 30
 

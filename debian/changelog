@@ -1,3 +1,27 @@
+slim (1.4.5-1) UNRELEASED; urgency=medium
+
+    * debian/control:  x11-xserver-utils added to dependencies
+      specfics:
+      debian/custom/slim-login uses xset (provided by x11-xserver-utils)
+      slim.conf default config uses sessionreg (provided by x11-xserver-utils)
+      (the sessionreg command registers logins in utmp, wtmp, and lastlog)
+        sessionstart_cmd exec   /usr/bin/sessreg -a -l "$DISPLAY" %user
+        sessionstop_cmd  exec   /usr/bin/sessreg -d -l "$DISPLAY" %user
+    * debian/rules: added  -DBUILD_SHARED_LIBS=no  to CMAKE_FLAGS
+    * X server may, nor might not, be running as root, so...
+      set /tmp/slimshot.png as screenshot destination in default slim.conf
+      (ref: http://forum.mxlinux.org/viewtopic.php?p=496562#p496562)
+    * added slim.conf var: screenshot_feedback_msg
+    * password_feedback_msg  listed in OPTIONS_LIST.txt doc
+    * removed ;commented lines from .desktop files
+    * clarification: the unicode c-h-ar-a-c-te-r testmessage
+      is only displayed during "slim -p" preview mode
+    * change duration of error_msg display (from 5sec, to 3sec)
+    * revert to shipping an older "default" theme featuring a
+      panel.png which has partial transparency
+
+ -- skidoo <email@redact.ed>  Tue, 30 Apr 2019 11:11:11 +1000
+
 slim (1.4.5) unstable; urgency=medium
 
     * merge bugfix to handle expired accounts

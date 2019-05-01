@@ -36,13 +36,13 @@ export SLIMBACKGROUND='
   <hbox>
     <button>
      <label>"View"</label>
-	<input file>"/usr/share/icons/Faenza-Cupertino-mini/actions/32/gtk-zoom-out.png"</input>
+	<input file>"/usr/share/icons/gnome/32x32/actions/gtk-zoom-out.png"</input>
         <action>feh -g 320x240 "$BACKGROUND" </action>
     </button>
 
     <button>
     <label>"Commit"</label>
-	<input file>"/usr/share/icons/Faenza-Cupertino-mini/actions/32/gtk-yes.png"</input>
+	<input file>"/usr/share/icons/gnome/32x32/actions/gtk-yes.png"</input>
         <action>cp -bv "$BACKGROUND" /usr/share/slim/themes/antiX/background.jpg</action>
         <action>yad --text "Done!"</action>
 	<action>EXIT:close</action>
@@ -50,7 +50,7 @@ export SLIMBACKGROUND='
 
     <button>
     <label>"Cancel"</label>
-	<input file>"/usr/share/icons/Faenza-Cupertino-mini/actions/32/gtk-cancel.png"</input>
+	<input file>"/usr/share/icons/gnome/32x32/actions/gtk-cancel.png"</input>
 	<action>EXIT:close</action>
     </button>
   </hbox>

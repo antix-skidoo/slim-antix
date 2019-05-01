@@ -14,7 +14,7 @@ Architecture: any
 Provides: x-display-manager
 Recommends: xterm, urxvt, scrot, antix-goodies, gtkdialog
 Suggests: xauth
-Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 1.2.9) | debconf-2.0, dbus, consolekit
+Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 1.2.9) | debconf-2.0, dbus, consolekit, x11-xserver-utils
 Description: desktop-independent graphical login manager for X11
  SLiM aims to be light and simple, yet is completely configurable
  via themes and via an option file.

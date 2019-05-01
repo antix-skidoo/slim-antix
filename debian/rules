@@ -20,8 +20,8 @@ LDFLAGS += -pie -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,now
 
 
 
-
-CMAKE_FLAGS = -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes
+#CMAKE_FLAGS = -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes
+CMAKE_FLAGS = -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes -DBUILD_SHARED_LIBS=no
 
 %:
 	dh $@ --buildsystem=cmake

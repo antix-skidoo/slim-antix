@@ -46,6 +46,8 @@ Cfg::Cfg()
     //  === NOTE: use of "x-terminal-emulator" for console_cmd would pose a security risk ===
     options.insert(option("console_cmd","/usr/bin/xterm -C -fg white -bg black +sb -g %dx%d+%d+%d -fn %dx%d -T ""Console login"" -e /bin/sh -c ""/bin/cat /etc/issue; exec /bin/login"""));
     options.insert(option("screenshot_cmd","import -window root /slimshot.png"));
+    options.insert(option("screenshot_feedback_msg", "screenshot image saved"));
+
     options.insert(option("welcome_msg","Welcome to %host"));
     options.insert(option("session_msg","Session:"));
     options.insert(option("default_user",""));
@@ -111,7 +113,6 @@ Cfg::Cfg()
     options.insert(option("password_msg","Please enter your password"));
     options.insert(option("password_feedback_capslock", "Authentication failed (CapsLock is ON)"));
     options.insert(option("password_feedback_msg", "Authentication failed"));
-
     options.insert(option("msg_color","#FFFF00"));
     options.insert(option("msg_font","Verdana:size=14:bold"));
     options.insert(option("msg_x","30"));
